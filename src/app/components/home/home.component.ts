@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { TextEditorComponent } from '../text-editor/text-editor.component';
-import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-home',
@@ -15,9 +14,7 @@ export class HomeComponent implements OnInit {
     editorContent = 'Start typing or paste your text here for analysis...';
     isInfoExpanded = false;
 
-    constructor(
-        private router: Router,
-    ) {
+    constructor() {
     }
 
     ngOnInit(): void {
