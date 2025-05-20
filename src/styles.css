@@ -1,5 +1,12 @@
-@import '@fortawesome/fontawesome-free/css/all.css';
+@import "@fortawesome/fontawesome-free/css/all.css";
+@import "./styles/tailwind-colors.css";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-primary-600: rgb(2 132 199);
+}
+
+.NgxEditor__Content {
+  min-height: 400px; /* make all of the editor area clickable */
+}
