@@ -1,0 +1,15 @@
+<div class="content">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="NgxEditor__Wrapper">
+      <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"> </ngx-editor-menu>
+      <ngx-editor
+        [editor]="editor"
+        formControlName="editorContent"
+        [placeholder]="'Type here...'"
+      ></ngx-editor>
+    </div>
+    <div class="btn">
+      <button class="btn-editor" [disabled]="form.invalid" type="submit">Evaluate</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,33 @@
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 10px 10%;
+    justify-content: center;
+}
+
+.NgxEditor__Content {
+    min-height: 20rem;
+}
+
+.btn {
+    margin: auto;
+    width: 30rem;
+}
+
+.btn-editor {
+    width: 100%;
+    background: #0b7e86;
+    color: white;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-editor:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
