@@ -45,12 +45,6 @@
                   "maximumError": "8kB"
                 }
               ],
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.development.ts",
-                  "with": "src/environments/environment.ts"
-                }
-              ],
               "outputHashing": "all"
             },
             "development": {
@@ -59,7 +53,7 @@
               "sourceMap": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
