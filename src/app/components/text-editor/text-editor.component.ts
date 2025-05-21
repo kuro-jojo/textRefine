@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Editor, toDoc, Validators, Toolbar } from 'ngx-editor';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, AbstractControl } from '@angular/forms';
+import { Editor, toDoc, Toolbar, Validators } from 'ngx-editor';
 import { EvaluationService } from '../../services/evaluation.service';
 import { EvaluationGlobalScore } from '../../models/evaluation';
 import { EditorContent, RawTextResult } from '../../models/editor';
@@ -38,8 +38,20 @@ export class TextEditorComponent implements OnInit {
     ];
     error: string = '';
 
+    // Custom validator for minimum words
+    private minWordsValidator(minWords: number): ValidatorFn {
+        return (control: AbstractControl) => {
+            const value = control.value as string;
+            if (!value) {
+                return null;
+            }
+            const words = value.trim().split(/\s+/).filter((word: string) => word.length > 0);
+            return words.length >= minWords ? null : { minWords: { required: minWords, actual: words.length } };
+        };
+    }
+
     form = new FormGroup({
-        editorContent: new FormControl('', [Validators.required(), Validators.minLength(100)]),
+        editorContent: new FormControl('', [Validators.required(), this.minWordsValidator(100)])
     });
 
     wordCount: number = 0;
