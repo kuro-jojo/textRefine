@@ -1,0 +1,107 @@
+<div
+    id="precision-summary-card"
+    class="p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6"
+>
+    <div class="flex items-center space-x-4 flex-1">
+        <div
+            class="rounded-lg {{
+                getScoreColor(precisionResult?.score).bg
+            }} p-4 flex flex-col items-center justify-center w-32 h-32"
+        >
+            <span
+                class="text-3xl font-bold {{
+                    getScoreColor(precisionResult?.score).text
+                }}"
+                >{{ getScoreInPercentage(precisionResult?.score) }}</span
+            >
+            <span
+                class="text-xs font-medium {{
+                    getScoreColor(precisionResult?.score).text
+                }}  mt-1"
+                >Precision Score</span
+            >
+        </div>
+        <div class="flex flex-col space-y-2 ml-2">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-align-left text-blue-400"></i>
+                <span class="text-sm text-gray-700 font-medium"
+                    >Word Count:</span
+                >
+                <span class="text-gray-900 font-bold">{{
+                    precisionResult?.word_count
+                }}</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-bolt text-yellow-400"></i>
+                <span class="text-sm text-gray-700 font-medium"
+                    >Total Issues:</span
+                >
+                <span class="text-gray-900 font-bold">{{
+                    precisionResult?.issues?.length
+                }}</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-percent text-red-400"></i>
+                <span class="text-sm text-gray-700 font-medium">Penalty:</span>
+                <span class="text-gray-900 font-bold">{{
+                    getScoreInPercentage(precisionResult?.normalized_penalty)
+                }}</span>
+                <span class="ml-1 relative group cursor-pointer">
+                    <i class="fa-regular fa-circle-question text-blue-400"></i>
+                    <span
+                        class="absolute left-1/2 -translate-x-1/2 top-full mt-1 w-48 bg-white border border-gray-200 rounded shadow-lg text-xs text-gray-700 px-2 py-1 opacity-0 group-hover:opacity-100 pointer-events-none z-10 transition"
+                    >
+                        Penalty = (Total penalty / Word Count), normalized for
+                        text length.
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="w-full md:w-48 flex flex-col items-center justify-center">
+        <app-issue-distribution-chart
+            [issues]="precisionResult?.issues || []"
+            class="w-full md:w-48"
+        ></app-issue-distribution-chart>
+    </div>
+</div>
+<!-- Issues: Word Usage & Stylistic -->
+<div
+    class="flex flex-col md:flex-row gap-8 mt-6 px-6 pb-6"
+    id="precision-issue-sections"
+>
+    <!-- Word Usage Issues -->
+    <div id="word-usage-issues" class="flex-1">
+        <div class="flex items-center mb-3 space-x-2">
+            <i class="fas fa-bullseye text-yellow-500"></i>
+            <h4 class="text-base font-semibold text-gray-800">
+                Word Usage Issues
+            </h4>
+        </div>
+        <div class="flex flex-col gap-4">
+            <app-issue-detail
+                *ngFor="let issue of getIssuesByCategory(Category.WordUsage)"
+                [issue]="issue"
+                [rawText]="rawText"
+                class="mb-2"
+            ></app-issue-detail>
+        </div>
+    </div>
+    <!-- Stylistic Issues -->
+    <div id="stylistic-issues" class="flex-1">
+        <div class="flex items-center mb-3 space-x-2">
+            <i class="fas fa-paintbrush text-fuchsia-500"></i>
+            <h4 class="text-base font-semibold text-gray-800">
+                Stylistic Issues
+            </h4>
+        </div>
+        <div class="flex flex-col gap-4">
+            <app-issue-detail
+                *ngFor="let issue of getIssuesByCategory(Category.Stylistic)"
+                [issue]="issue"
+                [rawText]="rawText"
+                class="mb-2"
+            ></app-issue-detail>
+        </div>
+    </div>
+</div>

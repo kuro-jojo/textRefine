@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ScoreCardComponent } from '../score-card/score-card.component';
 import { OverallScoreComponent } from '../overall-score/overall-score.component';
-import { IssueDetailComponent } from '../issue-detail/issue-detail.component';
-import { IssueDistributionChartComponent } from '../issue-distribution-chart/issue-distribution-chart.component';
-import { EvaluationGlobalScore, PrecisionResult } from '../../models/evaluation';
+import { CorrectnessPanelComponent } from '../correctness-panel/correctness-panel.component';
+import { PrecisionPanelComponent } from '../precision-panel/precision-panel.component';
+import { CorrectnessResult, EvaluationGlobalScore, PrecisionResult } from '../../models/evaluation';
 import { TextIssue, getCategorySeverityText, Category, ErrorCategory, Severity } from '../../models/issue';
 import { EvaluationResultService } from '../../services/evaluation-result.service';
 import { Router } from '@angular/router';
@@ -22,13 +22,15 @@ import { SEVERITY_CLASSES } from '../../utils';
         FormsModule,
         ScoreCardComponent,
         OverallScoreComponent,
-        IssueDetailComponent,
-        IssueDistributionChartComponent
+        CorrectnessPanelComponent,
+        PrecisionPanelComponent
     ],
     templateUrl: './result.component.html',
 })
 export class ResultComponent implements OnInit {
     evaluationResult: EvaluationGlobalScore | null = null;
+    precisionResult: PrecisionResult | null = null;
+    correctnessResult: CorrectnessResult | null = null;
     rawText: string = '';
 
     // Make Category enum available in template
@@ -39,12 +41,9 @@ export class ResultComponent implements OnInit {
     selectedTab: string = 'correctness';
     selectedSeverity: string = '';
     selectedType: string = '';
-    errorCategories = Object.values(Category);
     searchKeyword: string = '';
     sortBy: string = 'location';
-    filteredIssues: TextIssue[] = [];
 
-    precisionResult: PrecisionResult | null = null;
 
     tabs = [
         { id: 'correctness', icon: 'check', title: 'Correctness' },
@@ -82,8 +81,8 @@ export class ResultComponent implements OnInit {
                 if (result) {
                     this.evaluationResult = result;
                     this.filterTabsIfNoIssues();
-                    this.updateFilteredIssues();
                     this.precisionResult = result.vocabulary.precision;
+                    this.correctnessResult = result.correctness;
                 } else {
                     // this.router.navigate(['/']);
                 }
@@ -113,11 +112,6 @@ export class ResultComponent implements OnInit {
 
     selectTab(tabId: string) {
         this.selectedTab = tabId;
-        if (tabId === 'correctness') {
-            this.errorCategories = Object.values(Category);
-        }else if (tabId === 'precision') {
-            this.errorCategories = Object.values(Category).filter(category => category === Category.WordUsage || category === Category.Stylistic);
-        }
     }
 
     filterTabsIfNoIssues(): void {
@@ -128,73 +122,6 @@ export class ResultComponent implements OnInit {
         if (this.evaluationResult.vocabulary.precision.issues.length === 0) {
             this.tabs = this.tabs.filter(tab => tab.id !== 'precision');
         }
-    }
-
-    applyFilters(): void {
-        // Implement filtering logic based on selected values
-        this.updateFilteredIssues();
-    }
-
-    updateFilteredIssues(): void {
-        if (!this.evaluationResult) return;
-
-        let issues = [...this.evaluationResult.correctness.issues];
-
-        // Filter by type
-        if (this.selectedType) {
-            issues = issues.filter(issue => getCategoryName(issue.category) === this.selectedType);
-        }
-
-        // Filter by severity
-        if (this.selectedSeverity) {
-            issues = issues.filter(issue => getCategorySeverityText(issue) === this.selectedSeverity);
-        }
-
-        // Filter by keyword
-        if (this.searchKeyword) {
-            issues = issues.filter(issue => {
-                const category = getCategoryName(issue.category);
-                return issue.message.toLowerCase().includes(this.searchKeyword.toLowerCase()) ||
-                    category.toLowerCase().includes(this.searchKeyword.toLowerCase());
-            });
-        }
-
-        // Sort issues
-        switch (this.sortBy) {
-            case 'location':
-                issues.sort((a, b) => a.start_offset - b.start_offset);
-                break;
-            case 'severity':
-                issues.sort((a, b) => {
-                    return getCategorySeverity(b.category) - getCategorySeverity(a.category);
-                });
-                break;
-            case 'category':
-                issues.sort((a, b) => {
-                    return - getCategoryName(b.category).localeCompare(getCategoryName(a.category));
-                });
-                break;
-        }
-
-        this.filteredIssues = issues;
-    }
-
-    resetFilters(): void {
-        this.selectedSeverity = '';
-        this.selectedType = '';
-        this.searchKeyword = '';
-        this.sortBy = 'location';
-        this.updateFilteredIssues();
-    }
-
-
-    // Get issues for a specific category
-    getIssuesByCategory(category: Category): TextIssue[] {
-        if (!this.precisionResult?.issues) return [];
-        return this.precisionResult.issues.filter(issue => {
-            const issueCategory = getCategoryName(issue.category);
-            return issueCategory === category;
-        });
     }
 
     getSeverityClass(issue: TextIssue): string {
