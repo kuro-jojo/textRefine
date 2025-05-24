@@ -65,21 +65,38 @@ export interface PrecisionScoreBreakdown {
     penalty: number;
 }
 
-// Error Category
-export enum ErrorCategory {
-    SPELLING_TYPING = 'SPELLING_TYPING',
-    GRAMMAR = 'GRAMMAR',
-    STYLE = 'STYLE',
-    WORD_USAGE = 'WORD_USAGE',
-    STYLISTIC_ISSUES = 'STYLISTIC_ISSUES'
-}
+// Error Category with display names
+export type ErrorCategory = [
+    string, // display name
+    number  // severity level
+];
+
+// Error Category display names
+export const errorCategoryDisplayNames: { [key: string]: string } = {
+    'Spelling & Typos': 'Spelling & Typos',
+    'Grammar Rules': 'Grammar Rules',
+    'Mechanics': 'Mechanics',
+    'Word Usage': 'Word Usage',
+    'Meaning & Logic': 'Meaning & Logic',
+    'Stylistic Issues': 'Stylistic Issues',
+    'Contextual Style': 'Contextual Style'
+};
+
+// Helper function to get severity from category
+export const getCategorySeverity = (category: ErrorCategory): number => category[1];
+
+// Helper function to get display name from category
+export const getCategoryName = (category: ErrorCategory): string => category[0];
 
 // Text Issue
 export interface TextIssue {
     category: ErrorCategory;
     start_offset: number;
-    end_offset: number;
+    error_length: number;
     replacements: string[];
+    rule_issue_type: string;
+    message: string;
+    original_text: string;
 }
 
 // Lexical Diversity Result

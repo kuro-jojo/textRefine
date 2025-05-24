@@ -137,7 +137,7 @@ export class TextEditorComponent implements OnInit {
                         this.evaluationResultService.setEvaluationResult(response);
                         this.evaluationResultService.setRawText(rawText);
                         this.router.navigate(['/result']);
-                    }, 3000);
+                    }, 1000);
                 },
                 error: (error) => {
                     if (error.status === 0) {
