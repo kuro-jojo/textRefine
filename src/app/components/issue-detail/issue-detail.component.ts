@@ -1,15 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TextIssue, ErrorCategory, getCategorySeverity } from '../../models/evaluation';
-
-type Severity = 'Major' | 'Medium' | 'Minor';
-type Category =
-    | 'Spelling & Typos'
-    | 'Grammar Rules'
-    | 'Mechanics'
-    | 'Word Usage'
-    | 'Meaning & Logic'
-    | 'Stylistic Issues';
+import { TextIssue, ErrorCategory, getCategorySeverityText } from '../../models/issue';
+import { Severity, Category } from '../../models/issue';
 
 type SeverityClasses = {
     readonly [K in Severity]: string;
@@ -91,10 +83,7 @@ export class IssueDetailComponent {
     }
 
     getSeverityOrder(issue: TextIssue): Severity {
-        const severity = getCategorySeverity(issue.category);
-        if (severity <= 2) return 'Minor';
-        if (severity <= 3) return 'Medium';
-        return 'Major';
+        return getCategorySeverityText(issue);
     }
 
     getIssueText(issue: TextIssue): string {

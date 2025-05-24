@@ -116,9 +116,9 @@
                         (change)="updateFilteredIssues()"
                     >
                         <option value="">All Severities</option>
-                        <option value="minor">Minor</option>
-                        <option value="medium">Medium</option>
-                        <option value="major">Major</option>
+                        <option value="Minor">Minor</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Major">Major</option>
                     </select>
                     <select
                         class="border border-gray-200 rounded px-2 py-1 text-xs focus:ring-primary-500"
@@ -128,19 +128,27 @@
                         <option value="">All Types</option>
                         <option
                             *ngFor="let category of errorCategories"
-                            value="{{ category[0] }}"
-                            [selected]="selectedType === category[0]"
+                            value="{{ category }}"
+                            [selected]="selectedType === category"
                         >
-                            {{ category[0] }}
+                            {{ category }}
                         </option>
                     </select>
-                    <input
-                        type="text"
-                        placeholder="Keyword"
+                    <select
                         class="border border-gray-200 rounded px-2 py-1 text-xs focus:ring-primary-500"
-                        id="filter-keyword"
-                        style="width: 7rem"
-                    />
+                        [(ngModel)]="sortBy"
+                        (change)="updateFilteredIssues()"
+                    >
+                        <option value="location">Location</option>
+                        <option value="severity">Severity</option>
+                        <option value="category">Category</option>
+                    </select>
+                    <button
+                        class="border border-gray-200 rounded px-2 py-1 text-xs bg-red-500 text-white hover:bg-red-600 cursor-pointer"
+                        (click)="resetFilters()"
+                    >
+                        Reset
+                    </button>
                 </div>
             </div>
             <div id="breakdown-content" class="divide-y">
@@ -156,16 +164,22 @@
                             <i class="text-blue-600 mr-2 fa fa-check"></i>
                             Grammar &amp; Spelling Issues
                         </h3>
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div
+                        <div
+                            *ngIf="filteredIssues.length === 0"
+                            class="text-gray-500 text-xl text-center my-4"
+                        >
+                            No issues found
+                        </div>
+                        <div
+                            *ngIf="filteredIssues.length > 0"
+                            class="grid md:grid-cols-2 gap-4"
+                        >
+                            <app-issue-detail
                                 *ngFor="let issue of filteredIssues"
+                                [issue]="issue"
+                                [rawText]="rawText"
                                 class="bg-gray-100 rounded-lg p-4 mb-2"
-                            >
-                                <app-issue-detail
-                                    [issue]="issue"
-                                    [rawText]="rawText"
-                                ></app-issue-detail>
-                            </div>
+                            ></app-issue-detail>
                         </div>
                     </div>
                 </div>
