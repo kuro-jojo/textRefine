@@ -2,13 +2,12 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TextIssue, ErrorCategory, getCategorySeverityText } from '../../models/issue';
 import { Severity, Category } from '../../models/issue';
-
-type SeverityClasses = {
-    readonly [K in Severity]: string;
-};
+import { SEVERITY_CLASSES } from '../../utils';
 
 type CategoryDetail = {
     text_color: string;
+    background_color: string;
+    background_color_light: string;
     icon: string;
     description: string;
 }
@@ -23,41 +22,49 @@ export class IssueDetailComponent {
     @Input() issue!: TextIssue;
     @Input() rawText!: string;
 
-    private readonly severityClasses: SeverityClasses = {
-        Major: 'bg-red-200 text-red-400',
-        Medium: 'bg-orange-200 text-orange-400',
-        Minor: 'bg-indigo-200 text-indigo-400',
-    } as const;
+    private readonly severityClasses = SEVERITY_CLASSES;
 
     private readonly categoryDetail: Record<Category, CategoryDetail> = {
         'Spelling & Typos': {
             text_color: 'text-red-400',
+            background_color: 'bg-red-200',
+            background_color_light: 'bg-red-50',
             icon: 'fa-pen',
             description: 'Spelling errors, typos, and incorrect word usage'
         },
         'Grammar Rules': {
-            text_color: 'text-yellow-400',
+            text_color: 'text-teal-400',
+            background_color: 'bg-teal-200',
+            background_color_light: 'bg-teal-50',
             icon: 'fa-spell-check',
             description: 'Grammar errors, tense consistency, subject-verb agreement, and sentence structure'
         },
         'Mechanics': {
             text_color: 'text-blue-400',
+            background_color: 'bg-blue-200',
+            background_color_light: 'bg-blue-50',
             icon: 'fa-comma',
             description: 'Punctuation errors, capitalization, hyphenation, and formatting'
         },
         'Word Usage': {
             text_color: 'text-purple-400',
+            background_color: 'bg-purple-200',
+            background_color_light: 'bg-purple-50',
             icon: 'fa-code',
             description: 'Inconsistent or incorrect word usage, including verb tense, verb forms, and synonyms'
         },
         'Meaning & Logic': {
             text_color: 'text-green-400',
+            background_color: 'bg-green-200',
+            background_color_light: 'bg-green-50',
             icon: 'fa-paint-brush',
             description: 'Sentences with unclear or ambiguous meaning, logical errors, or lack of clarity'
         },
         'Stylistic Issues': {
-            text_color: 'text-gray-400',
-            icon: 'fa-question-circle',
+            text_color: 'text-fuchsia-400',
+            background_color: 'bg-fuchsia-200',
+            background_color_light: 'bg-fuchsia-50',
+            icon: 'fa-paint-brush',
             description: 'Writing style issues, including sentence structure, voice, tone, and clarity'
         }
     } as const;
@@ -67,9 +74,19 @@ export class IssueDetailComponent {
         return this.severityClasses[severity] || 'bg-gray-500 text-gray-900';
     }
 
-    getCategoryClass(issue: TextIssue): string {
+    getCategoryTextColor(issue: TextIssue): string {
         const category = issue.category[0] as Category;
         return this.categoryDetail[category].text_color || '';
+    }
+
+    getCategoryBackgroundColor(issue: TextIssue): string {
+        const category = issue.category[0] as Category;
+        return this.categoryDetail[category].background_color || '';
+    }
+
+    getCategoryBackgroundColorLight(issue: TextIssue): string {
+        const category = issue.category[0] as Category;
+        return this.categoryDetail[category].background_color_light || '';
     }
 
     getErrorIcon(issue: TextIssue): string {

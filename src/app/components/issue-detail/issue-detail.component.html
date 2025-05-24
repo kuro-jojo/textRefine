@@ -1,44 +1,63 @@
-<div class="flex items-center mb-2">
-    <span
-        class="px-2 py-0.5 rounded-full text-xs font-semibold {{
-            getSeverityClass(issue)
-        }} mr-2"
-    >
-        {{ getSeverityOrder(issue) }}
-    </span>
-    <span class="text-xs font-medium text-gray-600 flex items-center">
+<div
+    class="{{ getCategoryBackgroundColorLight(issue) }} border-l-4 {{
+        getCategoryTextColor(issue)
+    }} rounded-lg px-4 py-3 flex gap-3 items-start issue-card"
+>
+    <span class="flex-shrink-0 mt-1">
         <i
-            class="mr-1 {{ getCategoryClass(issue) }} fa {{
-                getErrorIcon(issue)
+            class="fas {{ getErrorIcon(issue) }} {{
+                getCategoryTextColor(issue)
             }}"
         ></i>
-        {{ issue.category[0] }}
     </span>
-    <span class="ml-auto cursor-pointer group relative">
-        <i class="text-blue-400 fa-regular fa-circle-question"></i>
-        <span
-            class="absolute left-1/2 -translate-x-1/2 top-full mt-1 w-48 bg-white border border-gray-200 rounded shadow-lg text-xs text-gray-700 px-2 py-1 opacity-0 group-hover:opacity-100 pointer-events-none z-10 transition"
-        >
-            {{ getCategoryDescription(issue.category) }}
-        </span>
-    </span>
-</div>
-<div class="mb-2 text-gray-800" [innerHTML]="getIssueText(issue)"></div>
-<div class="mb-1 text-sm text-gray-700">
-    <i class="text-blue-500 mr-1 fa fa-lightbulb"></i>
-    {{ issue.message }}
-    <br />
-    <span
-        class="bg-yellow-100 px-1.5 py-0.5 mt-2 inline-block rounded issue-chip font-semibold"
-    >
-        Suggestions
-    </span>
-    :
-    <span
-        *ngFor="let suggestion of issue.replacements.slice(0, 3); let i = index"
-        class="mt-2 text-cyan-800"
-    >
-        "{{ suggestion }}"
-        <span *ngIf="i < issue.replacements.length - 1">, </span>
-    </span>
+    <div class="flex-grow">
+        <div class="flex items-center mb-2">
+            <span
+                class="text-xs font-medium flex items-center {{
+                    getCategoryBackgroundColor(issue)
+                }} {{
+                    getCategoryTextColor(issue)
+                }} px-2 py-0.5 rounded-full mr-2"
+            >
+                {{ issue.category[0] }}
+            </span>
+            <span
+                class="px-2 py-0.5 rounded-full text-xs font-semibold {{
+                    getSeverityClass(issue)
+                }} mr-2"
+            >
+                {{ getSeverityOrder(issue) }}
+            </span>
+            <span class="ml-auto cursor-pointer group relative">
+                <i class="text-blue-400 fa-regular fa-circle-question"></i>
+                <span
+                    class="absolute left-1/2 -translate-x-1/2 top-full mt-1 w-48 bg-white border border-gray-200 rounded shadow-lg text-xs text-gray-700 px-2 py-1 opacity-0 group-hover:opacity-100 pointer-events-none z-10 transition"
+                >
+                    {{ getCategoryDescription(issue.category) }}
+                </span>
+            </span>
+        </div>
+        <div class="mb-2 text-gray-800" [innerHTML]="getIssueText(issue)"></div>
+        <div class="mb-1 text-sm text-gray-700">
+            <i class="text-blue-500 mr-1 fa fa-lightbulb"></i>
+            {{ issue.message }}
+            <br />
+            <span
+                class="bg-yellow-200 px-1.5 py-0.5 mt-2 inline-block rounded-full issue-chip font-semibold"
+            >
+                Suggestions
+            </span>
+            :
+            <span
+                *ngFor="
+                    let suggestion of issue.replacements.slice(0, 3);
+                    let i = index
+                "
+                class="mt-2 text-cyan-800"
+            >
+                "{{ suggestion }}"
+                <span *ngIf="i < issue.replacements.length - 1">, </span>
+            </span>
+        </div>
+    </div>
 </div>

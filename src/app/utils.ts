@@ -36,6 +36,12 @@ export const SCORE_COLORS = {
     }
 };
 
+export const SEVERITY_CLASSES = {
+    Major: 'bg-red-200 text-red-400',
+    Medium: 'bg-orange-200 text-orange-400',
+    Minor: 'bg-indigo-200 text-indigo-400',
+} as const;
+
 export function getScoreInPercentage(score: number | null | undefined): string {
     return score ? `${Math.round(score * 100)}` : 'N/A';
 }

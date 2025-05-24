@@ -1,12 +1,14 @@
 export type Severity = 'Major' | 'Medium' | 'Minor';
-export enum Category {
-    Spelling = 'Spelling & Typos',
-    Grammar = 'Grammar Rules',
-    Mechanics = 'Mechanics',
-    WordUsage = 'Word Usage',
-    Meaning = 'Meaning & Logic',
-    Stylistic = 'Stylistic Issues'
-}
+export type Category = 'Spelling & Typos' | 'Grammar Rules' | 'Mechanics' | 'Word Usage' | 'Meaning & Logic' | 'Stylistic Issues';
+
+export const Category = {
+    Spelling: 'Spelling & Typos',
+    Grammar: 'Grammar Rules',
+    Mechanics: 'Mechanics',
+    WordUsage: 'Word Usage',
+    Meaning: 'Meaning & Logic',
+    Stylistic: 'Stylistic Issues'
+} as const;
 
 
 export function getCategorySeverityText(issue: TextIssue): Severity {
@@ -37,7 +39,9 @@ export const errorCategoryDisplayNames: { [key: string]: string } = {
 export const getCategorySeverity = (category: ErrorCategory): number => category[1];
 
 // Helper function to get display name from category
-export const getCategoryName = (category: ErrorCategory): string => category[0];
+export function getCategoryName(category: ErrorCategory): Category {
+    return category[0] as Category;
+}
 
 // Text Issue
 export interface TextIssue {

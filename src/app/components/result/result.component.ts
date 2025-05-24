@@ -4,23 +4,35 @@ import { FormsModule } from '@angular/forms';
 import { ScoreCardComponent } from '../score-card/score-card.component';
 import { OverallScoreComponent } from '../overall-score/overall-score.component';
 import { IssueDetailComponent } from '../issue-detail/issue-detail.component';
-import { EvaluationGlobalScore } from '../../models/evaluation';
-import { TextIssue, getCategorySeverityText } from '../../models/issue';
+import { IssueDistributionChartComponent } from '../issue-distribution-chart/issue-distribution-chart.component';
+import { EvaluationGlobalScore, PrecisionResult } from '../../models/evaluation';
+import { TextIssue, getCategorySeverityText, Category, ErrorCategory, Severity } from '../../models/issue';
 import { EvaluationResultService } from '../../services/evaluation-result.service';
 import { Router } from '@angular/router';
 import { EvaluationService } from '../../services/evaluation.service';
-import { Category } from '../../models/issue';
 import { getCategoryName, getCategorySeverity } from '../../models/issue';
 import { getScoreColor, getScoreInPercentage, getScoreText } from '../../utils';
+import { SEVERITY_CLASSES } from '../../utils';
 
 @Component({
     selector: 'app-result',
-    imports: [CommonModule, FormsModule, ScoreCardComponent, OverallScoreComponent, IssueDetailComponent],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ScoreCardComponent,
+        OverallScoreComponent,
+        IssueDetailComponent,
+        IssueDistributionChartComponent
+    ],
     templateUrl: './result.component.html',
 })
 export class ResultComponent implements OnInit {
     evaluationResult: EvaluationGlobalScore | null = null;
     rawText: string = '';
+
+    // Make Category enum available in template
+    Category = Category;
     error: string | null = null;
     Math = Math;
 
@@ -32,8 +44,7 @@ export class ResultComponent implements OnInit {
     sortBy: string = 'location';
     filteredIssues: TextIssue[] = [];
 
-    // Error categories and their icons
-    ;
+    precisionResult: PrecisionResult | null = null;
 
     tabs = [
         { id: 'correctness', icon: 'check', title: 'Correctness' },
@@ -50,7 +61,7 @@ export class ResultComponent implements OnInit {
     ) { }
 
     demoCall() {
-        const text = `In todday's rapdidly evolving world, adaptability and continuous learning have become essential skills for success. As technology advances at an unprecedented pace, individuals and organizations must stayed informed and flexible to remain competitive. Embracing innovation fosters creativity and opens new opportunities, allowing us to solve complex problems more effectively. Education and skill development are crucial components in this journey, empowering people unto navigation change change confidently. Moreover, cultivating a growth mindset encourages resilience, enabling us to view challenges as chances to grow rather than obstacles. Collaboration and communication are also vital, as working together often leads to more innovative solutions and shared success. Sustainability has gained importance, urging us to adopt eco-friendly practices that protect our planet for future generations. In addition, mental health awareness is rising, highlighting the need to prioritize well-being amidst busy lifestyles. Ultimately, balancing technological progress with ethical considerations ensures that advancements benefit society as a whole. By fostering a culture of curiosity and openness, we can create a more inclusive and dynamic environment where everyone has the opportunity to thrive. As we look ahead, embracing change with a positive attitude will be key to building a resilient and prosperous future for all.`;
+        const text = `In todday's rapdidly evolving world, adaptability and continuous learning have become essential skills for success. As technology advances at an unprecedented pace, individuals and organizations must stayed informed and flexible to remain competitive. Embracing innovation fosters creativity and opens new opportunities, allowing us to solve complex problems more effectively. Education and skill development are crucial components in this journey, empowering people unto navigation change change confidently. Moreover, cultivating a growth mindset encourages resilience, enabling us to view challenges as chances to grow rather than obstacles. Collaboration and communication are also vital, as working together often leads to more innovative solutions and shared success. Sustainability has gained importance, urging us to adopt eco-friendly practices that protect our planet for future generations. In addition, mental health awareness are rising, highlighting the need to prioritize well-being amidst busy lifestyles. Ultimately, balancing technological progress with ethical considerations ensures that advancements benefit society as a whole. By fostering a culture of curiosity and openness, we can create the less more inclusives and dynamic environment where everyone has the opportunity to thrive. As I we look ahead, embracing change with a plus plus positive attitude will be key to building a resilient and prosperous future for all.`;
         this.evaluationService.evaluateText(text).subscribe({
             next: (result) => {
                 console.log(result);
@@ -72,6 +83,7 @@ export class ResultComponent implements OnInit {
                     this.evaluationResult = result;
                     this.filterTabsIfNoIssues();
                     this.updateFilteredIssues();
+                    this.precisionResult = result.vocabulary.precision;
                 } else {
                     // this.router.navigate(['/']);
                 }
@@ -101,6 +113,11 @@ export class ResultComponent implements OnInit {
 
     selectTab(tabId: string) {
         this.selectedTab = tabId;
+        if (tabId === 'correctness') {
+            this.errorCategories = Object.values(Category);
+        }else if (tabId === 'precision') {
+            this.errorCategories = Object.values(Category).filter(category => category === Category.WordUsage || category === Category.Stylistic);
+        }
     }
 
     filterTabsIfNoIssues(): void {
@@ -171,6 +188,24 @@ export class ResultComponent implements OnInit {
     }
 
 
+    // Get issues for a specific category
+    getIssuesByCategory(category: Category): TextIssue[] {
+        if (!this.precisionResult?.issues) return [];
+        return this.precisionResult.issues.filter(issue => {
+            const issueCategory = getCategoryName(issue.category);
+            return issueCategory === category;
+        });
+    }
+
+    getSeverityClass(issue: TextIssue): string {
+        const severity = this.getSeverityOrder(issue) as Severity;
+        return SEVERITY_CLASSES[severity] || 'bg-gray-500 text-gray-900';
+    }
+
+    getSeverityOrder(issue: TextIssue): Severity {
+        return getCategorySeverityText(issue);
+    }
+
     getScoreColor(score: number | null | undefined): { text: string; bg: string; all: string; } {
         return getScoreColor(score);
     }
@@ -202,5 +237,9 @@ export class ResultComponent implements OnInit {
 
     isSelected(tabId: string): boolean {
         return this.selectedTab === tabId;
+    }
+
+    getCategoryName(category: ErrorCategory): string {
+        return getCategoryName(category);
     }
 }

@@ -6,6 +6,7 @@ export interface EvaluationGlobalScore {
     score_in_percent: number;
     vocabulary: VocabularyResult;
     correctness: CorrectnessResult;
+    precision: PrecisionResult;
 }
 
 // Vocabulary Result
