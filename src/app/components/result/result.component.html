@@ -64,11 +64,9 @@
 
             <!-- Readability -->
             <app-score-card
-                title="Readability"
+                title="Readability (coming soon)"
                 subtitle="Ease of Reading"
-                [score]="
-                    evaluationResult?.vocabulary?.lexical_diversity?.ttr ?? null
-                "
+                [score]="null"
                 icon="book"
             ></app-score-card>
         </div>
@@ -124,6 +122,17 @@
                         [precisionResult]="precisionResult"
                         [rawText]="rawText"
                     ></app-precision-panel>
+                </div>
+                <div
+                    id="breakdown-panel-sophistication"
+                    class="accordion-content p-6 show"
+                    *ngIf="selectedTab === 'sophistication'"
+                >
+                    <!-- Sophistication Panel -->
+                    <app-sophistication-panel
+                        [sophisticationResult]="sophisticationResult"
+                        [rawText]="rawText"
+                    ></app-sophistication-panel>
                 </div>
             </div>
         </div>

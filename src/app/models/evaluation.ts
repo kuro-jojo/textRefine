@@ -24,6 +24,7 @@ export interface SophisticationResult {
     common_count: number;
     mid_count: number;
     rare_count: number;
+    unknown_count: number;
     level: SophisticationLevel;
     breakdown: SophisticationScoreBreakdown[];
 }

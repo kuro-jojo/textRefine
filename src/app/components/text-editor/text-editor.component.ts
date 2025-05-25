@@ -38,18 +38,6 @@ export class TextEditorComponent implements OnInit {
     ];
     error: string = '';
 
-    // Custom validator for minimum words
-    private minWordsValidator(minWords: number): ValidatorFn {
-        return (control: AbstractControl) => {
-            const value = control.value as string;
-            if (!value) {
-                return null;
-            }
-            const words = value.trim().split(/\s+/).filter((word: string) => word.length > 0);
-            return words.length >= minWords ? null : { minWords: { required: minWords, actual: words.length } };
-        };
-    }
-
     form = new FormGroup({
         editorContent: new FormControl('', [Validators.required(), this.minWordsValidator(100)])
     });
@@ -80,8 +68,21 @@ export class TextEditorComponent implements OnInit {
         });
     }
 
-    updateCounts(content: string): void {
-        // Split content into paragraphs and clean each paragraph
+    // Custom validator for minimum words
+    private minWordsValidator(minWords: number): ValidatorFn {
+        return (control: AbstractControl) => {
+            const value = control.value as string;
+            if (!value) {
+                return null;
+            }
+            return this.getWordCount(value) >= minWords ?
+                null :
+                { minWords: { required: minWords, actual: this.getWordCount(value) } };
+        };
+    }
+
+
+    private getWordCount(content: string): number {
         const paragraphs = content.split('</p>').map(p => {
             // Remove HTML tags from paragraph
             const text = p.replace(/<[^>]*>/g, '');
@@ -91,10 +92,15 @@ export class TextEditorComponent implements OnInit {
 
         // Flatten array of paragraphs and count words
         const words = paragraphs.flat();
+        return words.length;
+    }
+
+    private updateCounts(content: string): void {
+        const words = this.getWordCount(content);
         const text = content.replace(/<[^>]*>/g, '');
         const chars = text.replace(/\s/g, ''); // Remove all whitespace
 
-        this.wordCount = words.length;
+        this.wordCount = words;
         this.charCount = chars.length;
     }
 
