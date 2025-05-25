@@ -7,14 +7,16 @@ import { getScoreColor, getScoreInPercentage } from '../../utils';
 import { IssueDistributionChartComponent } from "../issue-distribution-chart/issue-distribution-chart.component";
 import { Category } from '../../models/issue';
 import { getCategoryName } from '../../models/issue';
+import { TooltipComponent } from "../tooltip/tooltip.component";
 
 @Component({
     selector: 'app-precision-panel',
     imports: [
-        CommonModule,
-        IssueDetailComponent,
-        IssueDistributionChartComponent
-    ],
+    CommonModule,
+    IssueDetailComponent,
+    IssueDistributionChartComponent,
+    TooltipComponent
+],
     templateUrl: './precision-panel.component.html'
 })
 export class PrecisionPanelComponent {

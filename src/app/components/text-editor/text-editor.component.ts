@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Editor, toDoc, Toolbar, Validators } from 'ngx-editor';
 import { EvaluationService } from '../../services/evaluation.service';
@@ -102,6 +102,14 @@ export class TextEditorComponent implements OnInit {
 
         this.wordCount = words;
         this.charCount = chars.length;
+    }
+
+    @HostListener('window:keydown', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): void {
+        if (event.ctrlKey && event.key === 'Enter') {
+            event.preventDefault();
+            this.onSubmit();
+        }
     }
 
     onSubmit(): void {

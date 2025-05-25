@@ -28,14 +28,9 @@
             >
                 {{ getSeverityOrder(issue) }}
             </span>
-            <span class="ml-auto cursor-pointer group relative">
-                <i class="text-blue-400 fa-regular fa-circle-question"></i>
-                <span
-                    class="absolute left-1/2 -translate-x-1/2 top-full mt-1 w-48 bg-white border border-gray-200 rounded shadow-lg text-xs text-gray-700 px-2 py-1 opacity-0 group-hover:opacity-100 pointer-events-none z-10 transition"
-                >
-                    {{ getCategoryDescription(issue.category) }}
-                </span>
-            </span>
+            <app-tooltip
+                tooltipText="{{ getCategoryDescription(issue.category) }}"
+            ></app-tooltip>
         </div>
         <div class="mb-2 text-gray-800" [innerHTML]="getIssueText(issue)"></div>
         <div class="mb-1 text-sm text-gray-700">
