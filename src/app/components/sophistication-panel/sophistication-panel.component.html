@@ -36,17 +36,9 @@
                         sophisticationResult?.word_count
                     }}</span>
                     <span class="text-gray-500">words analyzed</span>
-                    <span class="ml-auto cursor-pointer group relative">
-                        <i
-                            class="text-blue-400 text-xl fa-regular fa-circle-question"
-                        ></i>
-                        <span
-                            class="soph-tooltip absolute left-1/2 -translate-x-1/2 top-full mt-2 w-64 bg-white border border-gray-200 rounded shadow-lg text-xs text-gray-700 px-3 py-2 pointer-events-none opacity-0 group-hover:opacity-100 transition"
-                        >
-                            Only meaningful content is counted (e.g. excluding
-                            stop words).
-                        </span>
-                    </span>
+                    <app-tooltip
+                        tooltipText="Only meaningful content is counted (e.g. excluding stop words)."
+                    ></app-tooltip>
                 </span>
                 <span class="flex items-center gap-1">
                     <span
@@ -95,26 +87,17 @@
             </div>
         </div>
     </div>
-    <div class="mb-6">
+    <div class="flex flex-col gap-2 mb-6">
         <div class="flex items-center gap-2">
             <i class="text-blue-500 text-xl fa-solid fa-lightbulb"></i>
-            <div class="text-xl font-medium text-gray-700">
+            <div class="text-lg font-medium text-gray-700">
                 Sophistication Analysis
-                <span class="ml-2 cursor-pointer relative">
-                    <i
-                        class="text-blue-400 text-xl fa-regular fa-circle-question"
-                    ></i>
-                    <span
-                        class="soph-tooltip absolute left-1/2 -translate-x-1/2 top-full mt-2 w-64 bg-white border border-gray-200 rounded shadow-lg text-xs text-gray-700 px-3 py-2 pointer-events-none opacity-0 group-hover:opacity-100 transition"
-                    >
-                        Sophistication score is weighted by presence of mid/rare
-                        vocabulary, adjusted for ratio of meaningful content vs.
-                        total words. Common/unknown words lower the score.
-                    </span>
-                </span>
+                <app-tooltip
+                    tooltipText="Sophistication score is weighted by presence of mid/rare vocabulary, adjusted for ratio of meaningful content vs. total words. Common/unknown words lower the score."
+                ></app-tooltip>
             </div>
         </div>
-        <div class="mt-2 text-gray-600 text-sm">
+        <div class="mt-2 text-stone-500 text-sm">
             <div *ngIf="sophisticationFeedback" class="flex items-center gap-2">
                 <i [ngClass]="sophisticationFeedback.iconClass"></i>
                 <span>{{ sophisticationFeedback.message }}</span>
@@ -123,12 +106,14 @@
     </div>
     <!-- Horizontal Stacked Bar Chart -->
     <div id="sophistication-bar-chart-container" class="flex flex-col gap-3">
-        <div class="flex justify-between items-center mb-2">
+        <div
+            class="flex flex-col gap-5 sm:flex-row justify-between items-center mb-2"
+        >
             <div
                 class="text-sm text-gray-700 font-semibold flex items-center gap-2"
             >
                 <i class="text-blue-500 text-xl fa-solid fa-bars-progress"></i>
-                Vocabulary Frequency Distribution
+                Word Distribution
             </div>
             <div class="text-xs text-gray-400 flex gap-4">
                 <span class="flex items-center gap-1"

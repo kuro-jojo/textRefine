@@ -68,12 +68,11 @@ export class ResultComponent implements OnInit {
 
         const text3 = `In the contemporary milieu, the importance of fostering intellectual curiosity and cultivating a nuanced understanding of complex concepts cannot be overstated. As societal advancements accelerate, individuals are compelled to develop analytical acumen and adaptive skills to navigate an increasingly intricate world. Engaging in rigorous scholarly pursuits and embracing interdisciplinary approaches enriches one's perspective, fostering innovation and critical thinking. Moreover, the cultivation of emotional intelligence and ethical integrity remains paramount in establishing meaningful connections and fostering communal harmony. As environmental challenges mount, it becomes imperative to advocate for sustainable practices that balance economic growth with ecological preservation. Embracing diversity and promoting inclusivity are essential for building resilient societies that thrive on mutual respect and shared values. The pursuit of knowledge, coupled with a commitment to social responsibility, empowers us to address global issues with sagacity and compassion. Ultimately, the synthesis of intellectual rigor and moral virtue paves the way for a more enlightened and equitable future, where progress is measured not solely by technological achievements but also by our capacity for empathy and understanding.`;
 
-        this.evaluationService.evaluateText(text3).subscribe({
+        this.evaluationService.evaluateText(text).subscribe({
             next: (result) => {
                 console.log(result);
                 this.evaluationResultService.setEvaluationResult(result);
-                this.evaluationResultService.setRawText(text3);
-                // this.router.navigate(['/result']);
+                this.evaluationResultService.setRawText(text);
             },
             error: (error) => {
                 console.error(error);

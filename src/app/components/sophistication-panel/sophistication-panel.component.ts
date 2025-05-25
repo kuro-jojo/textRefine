@@ -3,14 +3,16 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { SophisticationResult, SophisticationLevel } from "../../models/evaluation";
 import { getScoreColor, getScoreInPercentage, getScoreText } from "../../utils";
+import { TooltipComponent } from "../tooltip/tooltip.component";
 
 @Component({
     selector: 'app-sophistication-panel',
     standalone: true,
     imports: [
-        CommonModule,
-        FormsModule
-    ],
+    CommonModule,
+    FormsModule,
+    TooltipComponent
+],
     templateUrl: './sophistication-panel.component.html',
 })
 export class SophisticationPanelComponent implements OnChanges {
@@ -29,15 +31,14 @@ export class SophisticationPanelComponent implements OnChanges {
     getScoreText = getScoreText;
 
     colors = {
-        common: ['bg-blue-200', 'text-blue-700'],
-        mid: ['bg-fuchsia-200', 'text-fuchsia-700'],
-        rare: ['bg-emerald-200', 'text-emerald-700'],
-        unknown: ['bg-gray-200', 'text-gray-700']
+        common: ['bg-blue-300', 'text-blue-700'],
+        mid: ['bg-fuchsia-300', 'text-fuchsia-700'],
+        rare: ['bg-emerald-300', 'text-emerald-700'],
+        unknown: ['bg-gray-300', 'text-gray-700']
     }
-    
+
 
     ngOnChanges(changes: SimpleChanges): void {
-        console.log(changes);
         if (changes['sophisticationResult']) {
             const currentValue = changes['sophisticationResult'].currentValue;
             if (currentValue) {
@@ -52,7 +53,6 @@ export class SophisticationPanelComponent implements OnChanges {
 
         this.sophisticationResult.breakdown.forEach(breakdown => {
             const groupKey = breakdown.group.toLocaleLowerCase();
-            console.log(this.wordGroups[groupKey]);
             if (this.wordGroups[groupKey]) {
                 this.wordGroups[groupKey].words = breakdown.words;
             }
@@ -62,7 +62,7 @@ export class SophisticationPanelComponent implements OnChanges {
     getShownWords(group: keyof typeof this.wordGroups): string[] {
         const wordGroup = this.wordGroups[group];
         if (!wordGroup) return [];
-        
+
         if (!wordGroup.showAll) {
             return wordGroup.words.slice(0, 10);
         }

@@ -84,7 +84,7 @@
             *ngIf="tabs.length > 0"
         >
             <div class="border-b">
-                <nav class="flex -mb-px">
+                <nav class="flex -mb-px overflow-x-auto">
                     <button
                         *ngFor="let tab of tabs"
                         (click)="selectTab(tab.id)"
@@ -104,7 +104,7 @@
                 <!-- Correctness Panel -->
                 <div
                     id="breakdown-panel-correctness"
-                    class="accordion-content p-6"
+                    class="accordion-content"
                     *ngIf="selectedTab === 'correctness'"
                 >
                     <app-correctness-panel

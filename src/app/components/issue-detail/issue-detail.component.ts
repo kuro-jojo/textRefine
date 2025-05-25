@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TextIssue, ErrorCategory, getCategorySeverityText } from '../../models/issue';
 import { Severity, Category } from '../../models/issue';
 import { SEVERITY_CLASSES } from '../../utils';
+import { TooltipComponent } from "../tooltip/tooltip.component";
 
 type CategoryDetail = {
     text_color: string;
@@ -14,7 +15,7 @@ type CategoryDetail = {
 
 @Component({
     selector: 'app-issue-detail',
-    imports: [CommonModule],
+    imports: [CommonModule, TooltipComponent],
     templateUrl: './issue-detail.component.html',
     standalone: true
 })

@@ -46,15 +46,9 @@
                 <span class="text-gray-900 font-bold">{{
                     getScoreInPercentage(precisionResult?.normalized_penalty)
                 }}</span>
-                <span class="ml-1 relative group cursor-pointer">
-                    <i class="fa-regular fa-circle-question text-blue-400"></i>
-                    <span
-                        class="absolute left-1/2 -translate-x-1/2 top-full mt-1 w-48 bg-white border border-gray-200 rounded shadow-lg text-xs text-gray-700 px-2 py-1 opacity-0 group-hover:opacity-100 pointer-events-none z-10 transition"
-                    >
-                        Penalty = (Total penalty / Word Count), normalized for
-                        text length.
-                    </span>
-                </span>
+                <app-tooltip
+                    tooltipText="Penalty = (Total penalty / Word Count), normalized for text length."
+                ></app-tooltip>
             </div>
         </div>
     </div>
