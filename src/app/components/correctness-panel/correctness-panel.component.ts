@@ -27,7 +27,6 @@ export class CorrectnessPanelComponent implements OnChanges {
     errorCategories = Object.values(Category);
 
     ngOnChanges(changes: SimpleChanges): void {
-        console.log(changes);
         if (changes['correctnessResult']) {
             this.correctnessResult = changes['correctnessResult'].currentValue;
             this.updateFilteredIssues();
