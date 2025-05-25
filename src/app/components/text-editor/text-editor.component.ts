@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
 import { WordCounterComponent } from '../word-counter/word-counter.component';
 import { EvaluationResultService } from '../../services/evaluation-result.service';
 
-const MIN_WORDS = 20;
 
 @Component({
     selector: 'app-text-editor',
@@ -27,6 +26,7 @@ const MIN_WORDS = 20;
     styleUrls: ['./text-editor.component.css']
 })
 export class TextEditorComponent implements OnInit {
+    MIN_WORDS = 20;
     editor: Editor = new Editor({
         history: true
     });
@@ -41,7 +41,7 @@ export class TextEditorComponent implements OnInit {
     error: string = '';
 
     form = new FormGroup({
-        editorContent: new FormControl('', [Validators.required(), this.minWordsValidator(MIN_WORDS)])
+        editorContent: new FormControl('', [Validators.required(), this.minWordsValidator(this.MIN_WORDS)])
     });
 
     wordCount: number = 0;

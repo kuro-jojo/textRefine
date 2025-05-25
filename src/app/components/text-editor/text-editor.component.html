@@ -28,7 +28,7 @@
                 class="text-blue-500 text-sm my-2"
             >
                 <i class="fa-solid fa-circle-exclamation"></i>
-                At least 100 words are required
+                At least {{ MIN_WORDS }} words are required
             </div>
             <button
                 *ngIf="!isEvaluating"
