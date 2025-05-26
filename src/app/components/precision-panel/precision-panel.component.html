@@ -76,7 +76,7 @@
             <app-issue-detail
                 *ngFor="let issue of getIssuesByCategory(Category.WordUsage)"
                 [issue]="issue"
-                [rawText]="rawText"
+                [text]="text"
                 class="mb-2"
             ></app-issue-detail>
         </div>
@@ -93,7 +93,7 @@
             <app-issue-detail
                 *ngFor="let issue of getIssuesByCategory(Category.Stylistic)"
                 [issue]="issue"
-                [rawText]="rawText"
+                [text]="text"
                 class="mb-2"
             ></app-issue-detail>
         </div>

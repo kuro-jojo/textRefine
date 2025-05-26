@@ -9,15 +9,15 @@ import { TooltipComponent } from "../tooltip/tooltip.component";
     selector: 'app-sophistication-panel',
     standalone: true,
     imports: [
-    CommonModule,
-    FormsModule,
-    TooltipComponent
-],
+        CommonModule,
+        FormsModule,
+        TooltipComponent
+    ],
     templateUrl: './sophistication-panel.component.html',
 })
 export class SophisticationPanelComponent implements OnChanges {
     @Input() sophisticationResult: SophisticationResult | null = null;
-    @Input() rawText: string = '';
+    @Input() text: string | null = '';
 
     wordGroups: { [key: string]: { words: string[], showAll: boolean } } = {
         common: { words: [], showAll: false },

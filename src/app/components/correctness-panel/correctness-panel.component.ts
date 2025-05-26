@@ -18,18 +18,22 @@ import { FormsModule } from '@angular/forms';
 })
 export class CorrectnessPanelComponent implements OnChanges {
     @Input() correctnessResult: CorrectnessResult | null = null;
-    @Input() rawText: string = '';
+    @Input() text!: string;
 
     filteredIssues: TextIssue[] = [];
+    shownIssues: TextIssue[] = [];
     selectedSeverity: string = '';
     selectedType: string = '';
     sortBy: string = 'location';
     errorCategories = Object.values(Category);
+    currentNextWindow: number = 0;
+    nextWindowValue: number = 6;
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['correctnessResult']) {
             this.correctnessResult = changes['correctnessResult'].currentValue;
             this.updateFilteredIssues();
+            this.updateShownIssues();
         }
     }
 
@@ -73,5 +77,32 @@ export class CorrectnessPanelComponent implements OnChanges {
         }
 
         this.filteredIssues = issues;
+    }
+
+    updateShownIssues(): void {
+        if (!this.correctnessResult) return;
+
+        this.shownIssues = this.filteredIssues.slice(0, this.currentNextWindow + this.nextWindowValue);
+        this.currentNextWindow += this.nextWindowValue;
+    }
+
+    getShowMoreText(): string {
+        if (!this.correctnessResult) return '';
+        if (this.correctnessResult.issues.length <= this.nextWindowValue) {
+            return '';
+        }
+        if (this.correctnessResult.issues.length > this.currentNextWindow) {
+            return `and ${this.correctnessResult.issues.length - this.currentNextWindow} more...`;
+        }
+        return 'show less';
+    }
+
+    toggleShowNext(): void {
+        if (!this.correctnessResult) return;
+
+        if (this.correctnessResult.issues.length <= this.currentNextWindow) {
+            this.currentNextWindow = 0;
+        }
+        this.updateShownIssues();
     }
 }

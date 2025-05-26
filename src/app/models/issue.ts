@@ -53,3 +53,11 @@ export interface TextIssue {
     message: string;
     original_text: string;
 }
+
+export type CategoryDetail = {
+    text_color: string;
+    background_color: string;
+    background_color_light: string;
+    icon: string;
+    description: string;
+}

@@ -4,6 +4,12 @@
 >
     {{ error }}
 </div>
+<div
+    *ngIf="info"
+    class="text-blue-500 text-sm bg-blue-100 text-center p-4 rounded mb-4"
+>
+    {{ info }}
+</div>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="bg-white rounded-lg shadow-md p-4">
         <div class="NgxEditor__Wrapper">
@@ -34,7 +40,7 @@
                 *ngIf="!isEvaluating"
                 [disabled]="form.invalid"
                 type="submit"
-                class="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition duration-200 flex items-center justify-center cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-400"
+                class="w-full py-3 bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-lg transition duration-200 flex items-center justify-center cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-400"
             >
                 <i class="mr-2 fa-solid fa-magnifying-glass"></i>
                 Analyze Text

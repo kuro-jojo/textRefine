@@ -12,16 +12,16 @@ import { TooltipComponent } from "../tooltip/tooltip.component";
 @Component({
     selector: 'app-precision-panel',
     imports: [
-    CommonModule,
-    IssueDetailComponent,
-    IssueDistributionChartComponent,
-    TooltipComponent
-],
+        CommonModule,
+        IssueDetailComponent,
+        IssueDistributionChartComponent,
+        TooltipComponent
+    ],
     templateUrl: './precision-panel.component.html'
 })
 export class PrecisionPanelComponent {
     @Input() precisionResult: PrecisionResult | null = null;
-    @Input() rawText: string = '';
+    @Input() text!: string;
 
     getScoreColor = getScoreColor;
     getScoreInPercentage = getScoreInPercentage;

@@ -13,7 +13,7 @@
     <div class="flex-grow">
         <div class="flex items-center mb-2">
             <span
-                class="text-xs font-medium flex items-center {{
+                class="text-[0.7rem] font-medium flex items-center {{
                     getCategoryBackgroundColor(issue)
                 }} {{
                     getCategoryTextColor(issue)
@@ -22,7 +22,7 @@
                 {{ issue.category[0] }}
             </span>
             <span
-                class="px-2 py-0.5 rounded-full text-xs font-semibold {{
+                class="px-2 py-0.5 rounded-full text-[0.7rem] font-semibold {{
                     getSeverityClass(issue)
                 }} mr-2"
             >
@@ -38,7 +38,7 @@
             {{ issue.message }}
             <br />
             <span
-                class="bg-yellow-200 px-1.5 py-0.5 mt-2 inline-block rounded-full issue-chip font-semibold"
+                class="bg-yellow-200 px-1.5 py-0.5 mt-2 inline-block rounded-full issue-chip font-semibold text-[0.7rem]"
             >
                 Suggestions
             </span>
@@ -48,7 +48,7 @@
                     let suggestion of issue.replacements.slice(0, 3);
                     let i = index
                 "
-                class="mt-2 text-cyan-800"
+                class="mt-2 text-cyan-800 text-[0.7rem]"
             >
                 "{{ suggestion }}"
                 <span *ngIf="i < issue.replacements.length - 1">, </span>

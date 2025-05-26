@@ -46,10 +46,10 @@ export interface SophisticationScoreBreakdown {
 
 // Word Frequency Group
 export enum WordFrequencyGroup {
-    COMMON = 'COMMON',
-    MID = 'MID',
-    RARE = 'RARE',
-    UNKNOWN = 'UNKNOWN'
+    COMMON = 'Common',
+    MID = 'Mid',
+    RARE = 'Rare',
+    UNKNOWN = 'Unknown'
 }
 
 // Precision Result

@@ -50,17 +50,25 @@
 </div>
 <div class="mb-4 p-6">
     <div
-        *ngIf="filteredIssues.length === 0"
+        *ngIf="shownIssues.length === 0"
         class="text-gray-500 text-xl text-center my-4"
     >
-        No issues found
+        <span *ngIf="filteredIssues.length === 0" class="font-semibold">No issues found</span>
+        <span *ngIf="filteredIssues.length > 0" class="font-semibold">No issues found for selected filters</span>
+        <span *ngIf="filteredIssues.length > 0" class="font-semibold">No more issues</span>
     </div>
-    <div *ngIf="filteredIssues.length > 0" class="grid md:grid-cols-2 gap-4">
+    <div *ngIf="shownIssues.length > 0" class="grid md:grid-cols-2 gap-4">
         <app-issue-detail
-            *ngFor="let issue of filteredIssues"
+            *ngFor="let issue of shownIssues"
             [issue]="issue"
-            [rawText]="rawText"
+            [text]="text"
             class="rounded-lg mb-2"
         ></app-issue-detail>
+        <span
+            *ngIf="filteredIssues.length > nextWindowValue"
+            (click)="toggleShowNext()"
+            class="py-1 text-blue-500 font-semibold text-sm cursor-pointer hover:underline"
+            >{{ getShowMoreText() }}</span
+        >
     </div>
 </div>

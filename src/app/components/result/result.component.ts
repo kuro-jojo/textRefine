@@ -5,15 +5,20 @@ import { ScoreCardComponent } from '../score-card/score-card.component';
 import { OverallScoreComponent } from '../overall-score/overall-score.component';
 import { CorrectnessPanelComponent } from '../correctness-panel/correctness-panel.component';
 import { PrecisionPanelComponent } from '../precision-panel/precision-panel.component';
-import { CorrectnessResult, EvaluationGlobalScore, PrecisionResult } from '../../models/evaluation';
-import { TextIssue, getCategorySeverityText, Category, ErrorCategory, Severity } from '../../models/issue';
+import { CorrectnessResult, EvaluationGlobalScore, PrecisionResult, WordFrequencyGroup } from '../../models/evaluation';
+import { Category, ErrorCategory } from '../../models/issue';
 import { EvaluationResultService } from '../../services/evaluation-result.service';
 import { Router } from '@angular/router';
 import { EvaluationService } from '../../services/evaluation.service';
 import { getCategoryName } from '../../models/issue';
-import { getScoreColor, getScoreInPercentage, getScoreText, SEVERITY_CLASSES } from '../../utils';
+import { getScoreColor, DETAIL_OF_CATEGORY } from '../../utils';
 import { SophisticationPanelComponent } from "../sophistication-panel/sophistication-panel.component";
 import { SophisticationResult } from "../../models/evaluation";
+
+interface TextToken {
+    text: string;
+    category: ErrorCategory | null;
+}
 
 @Component({
     selector: 'app-result',
@@ -33,7 +38,8 @@ export class ResultComponent implements OnInit {
     precisionResult: PrecisionResult | null = null;
     correctnessResult: CorrectnessResult | null = null;
     sophisticationResult: SophisticationResult | null = null;
-    rawText: string = '';
+    editorContent: string = '';
+    highlightedText: string = '';
 
     // Make Category enum available in template
     Category = Category;
@@ -46,6 +52,16 @@ export class ResultComponent implements OnInit {
     searchKeyword: string = '';
     sortBy: string = 'location';
 
+    categoryColors: { [key: string]: string } = {
+        'Spelling & Typos': `${DETAIL_OF_CATEGORY['Spelling & Typos'].background_color} ${DETAIL_OF_CATEGORY['Spelling & Typos'].text_color}`,
+        'Grammar Rules': `${DETAIL_OF_CATEGORY['Grammar Rules'].background_color} ${DETAIL_OF_CATEGORY['Grammar Rules'].text_color}`,
+        'Mechanics': `${DETAIL_OF_CATEGORY['Mechanics'].background_color} ${DETAIL_OF_CATEGORY['Mechanics'].text_color}`,
+        'Word Usage': `${DETAIL_OF_CATEGORY['Word Usage'].background_color} ${DETAIL_OF_CATEGORY['Word Usage'].text_color}`,
+        'Meaning & Logic': `${DETAIL_OF_CATEGORY['Meaning & Logic'].background_color} ${DETAIL_OF_CATEGORY['Meaning & Logic'].text_color}`,
+        'Stylistic Issues': `${DETAIL_OF_CATEGORY['Stylistic Issues'].background_color} ${DETAIL_OF_CATEGORY['Stylistic Issues'].text_color}`,
+        'Rare Words': 'bg-teal-200 text-teal-400',
+    };
+    categories = Object.keys(this.categoryColors);
 
     tabs = [
         { id: 'correctness', icon: 'check', title: 'Correctness' },
@@ -55,6 +71,8 @@ export class ResultComponent implements OnInit {
         // { id: 'readability', icon: 'glasses', title: 'Readability' }
     ];
 
+    getScoreColor = getScoreColor;
+
     constructor(
         private evaluationResultService: EvaluationResultService,
         private router: Router,
@@ -62,17 +80,14 @@ export class ResultComponent implements OnInit {
     ) { }
 
     demoCall() {
-        const text = `In todday's rapdidly evolving world, adaptability and continuous learning have become essential skills for success. As technology advances at an unprecedented pace, individuals and organizations must stayed informed and flexible to remain competitive. Embracing innovation fosters creativity and opens new opportunities, allowing us to solve complex problems more effectively. Education and skill development are crucial components in this journey, empowering people unto navigation change change confidently. Moreover, cultivating a growth mindset encourages resilience, enabling us to view challenges as chances to grow rather than obstacles. Collaboration and communication are also vital, as working together often leads to more innovative solutions and shared success. Sustainability has gained importance, urging us to adopt eco-friendly practices that protect our planet for future generations. In addition, mental health awareness are rising, highlighting the need to prioritize well-being amidst busy lifestyles. Ultimately, balancing technological progress with ethical considerations ensures that advancements benefit society as a whole. By fostering a culture of curiosity and openness, we can create the less more inclusives and dynamic environment where everyone has the opportunity to thrive. As I we look ahead, embracing change with a plus plus positive attitude will be key to building a resilient and prosperous future for all.`;
-
-        const text2 = `Every day, people face many different tasks and challenges. It is important to stay positive and work hard to reach your goals. In life, we need to be kind to others and help those in need. Taking time to smile and say kind words can make a big difference in someone's day. School is a place where children learn many new things, like reading, writing, and math. It is also a place to make new friends and have fun. When students study well, they can do better in their classes. Outside of school, playing sports or doing activities like drawing or singing can help us relax and stay healthy. Family and friends are very important because they give us support and love. We should always show respect and be honest with others. Sometimes, things do not go as planned, but it is okay to make mistakes because we learn from them. Taking care of our health by eating good food, sleeping enough, and staying active is very helpful. The world is full of many beautiful places and wonderful animals. We should protect our environment so that everyone can enjoy nature. By working together and being kind, we can make our communities better and happier places to live.`;
-
-        const text3 = `In the contemporary milieu, the importance of fostering intellectual curiosity and cultivating a nuanced understanding of complex concepts cannot be overstated. As societal advancements accelerate, individuals are compelled to develop analytical acumen and adaptive skills to navigate an increasingly intricate world. Engaging in rigorous scholarly pursuits and embracing interdisciplinary approaches enriches one's perspective, fostering innovation and critical thinking. Moreover, the cultivation of emotional intelligence and ethical integrity remains paramount in establishing meaningful connections and fostering communal harmony. As environmental challenges mount, it becomes imperative to advocate for sustainable practices that balance economic growth with ecological preservation. Embracing diversity and promoting inclusivity are essential for building resilient societies that thrive on mutual respect and shared values. The pursuit of knowledge, coupled with a commitment to social responsibility, empowers us to address global issues with sagacity and compassion. Ultimately, the synthesis of intellectual rigor and moral virtue paves the way for a more enlightened and equitable future, where progress is measured not solely by technological achievements but also by our capacity for empathy and understanding.`;
+        const text = `<h1>A titledr for the text</h1>
+In todday's rapdidly evolving world, adaptability and continuous learning have become essential skills for success. As technology advances at an unprecedented pace, individuals and organizations must stayed informed and flexible to remain competitive. Embracing innovation fosters creativity and opens new opportunities, allowing us to solve complex problems more effectively. Education and skill development are crucial components in this journey, empowering people unto navigation change change confidently. Moreover, cultivating a growth mindset encourages resilience, enabling us to view challenges as chances to grow rather than obstacles. Collaboration and communication are also vital, as working together often leads to more innovative solutions and shared success. Sustainability has gained importance, urging us to adopt eco-friendly practices that protect our planet for future generations. In addition, mental health awareness are rising, highlighting the need to prioritize well-being amidst busy lifestyles. Ultimately, balancing technological progress with ethical considerations ensures that advancements benefit society as a whole. By fostering a culture of curiosity and openness, we can create the less more inclusives and dynamic environment where everyone has the opportunity to thrive. As I we look ahead, embracing change with a plus plus positive attitude will be key to building a resilient and prosperous future for all.`;
 
         this.evaluationService.evaluateText(text).subscribe({
             next: (result) => {
                 console.log(result);
                 this.evaluationResultService.setEvaluationResult(result);
-                this.evaluationResultService.setRawText(text);
+                this.evaluationResultService.setEditorContent(text);
             },
             error: (error) => {
                 console.error(error);
@@ -101,10 +116,11 @@ export class ResultComponent implements OnInit {
             }
         });
 
-        this.evaluationResultService.getRawText().subscribe({
-            next: (text) => {
-                if (text) {
-                    this.rawText = text;
+        this.evaluationResultService.getEditorInfo().subscribe({
+            next: (info) => {
+                if (info) {
+                    this.editorContent = info;
+                    this.highlightedText = this.highlightText(this.editorContent);
                 } else {
                     this.router.navigate(['/']);
                 }
@@ -121,6 +137,10 @@ export class ResultComponent implements OnInit {
         this.selectedTab = tabId;
     }
 
+    isTabSelected(tabId: string): boolean {
+        return this.selectedTab === tabId;
+    }
+
     filterTabsIfNoIssues(): void {
         if (!this.evaluationResult) return;
         if (this.evaluationResult.correctness.issues.length === 0) {
@@ -133,30 +153,9 @@ export class ResultComponent implements OnInit {
         this.selectedTab = this.tabs[0].id;
     }
 
-    getSeverityClass(issue: TextIssue): string {
-        const severity = this.getSeverityOrder(issue) as Severity;
-        return SEVERITY_CLASSES[severity] || 'bg-gray-500 text-gray-900';
-    }
-
-    getSeverityOrder(issue: TextIssue): Severity {
-        return getCategorySeverityText(issue);
-    }
-
-    getScoreColor(score: number | null | undefined): { text: string; bg: string; all: string; } {
-        return getScoreColor(score);
-    }
-
-    getScoreText(score: number | null | undefined): string {
-        return getScoreText(score);
-    }
-
-    getScoreInPercentage(score: number | null | undefined): string {
-        return getScoreInPercentage(score);
-    }
-
     getSelectedTabColor(tabId: string): { text: string; bg: string; all: string; } {
         if (!this.evaluationResult) return this.getScoreColor(null);
-        if (!this.isSelected(tabId)) return this.getScoreColor(null);
+        if (!this.isTabSelected(tabId)) return this.getScoreColor(null);
         switch (tabId) {
             case 'correctness':
                 return this.getScoreColor(this.evaluationResult.correctness.score);
@@ -171,11 +170,70 @@ export class ResultComponent implements OnInit {
         }
     }
 
-    isSelected(tabId: string): boolean {
-        return this.selectedTab === tabId;
+    highlightText(text: string): string {
+        if (!this.evaluationResult) return text;
+
+        const tokenizedText = this.getHighlightedIssues(text);
+
+        // Get all issues from correctness and precision results
+
+        let highlightedText = "";
+
+        for (let index = 0; index < tokenizedText.length; index++) {
+            if (index % 2 == 0) {
+                highlightedText += tokenizedText[index].text
+                continue
+            }
+            const token = tokenizedText[index];
+            if (token.category) {
+                const categoryName = getCategoryName(token.category!);
+                const colorClass = this.categoryColors[categoryName] || 'bg-gray-100 text-gray-800';
+                const highlightedPart = `<span class="inline-block rounded px-1 ${colorClass}">${token.text}</span>`;
+                highlightedText += highlightedPart
+            }
+        }
+
+        const rareWords = this.getHighlightedRareWords(text);
+        rareWords.forEach((word: TextToken) => {
+            const colorClass = this.categoryColors['Rare Words'] || 'bg-gray-100 text-gray-800';
+            const highlightedPart = `<span class="inline-block rounded px-1 ${colorClass}">${word.text}</span>`;
+            highlightedText = highlightedText.replace(word.text, highlightedPart)
+        });
+
+        return highlightedText;
     }
 
-    getCategoryName(category: ErrorCategory): string {
-        return getCategoryName(category);
+    getHighlightedRareWords(text: string): TextToken[] {
+        if (!this.evaluationResult) return []
+        const rareWords = this.evaluationResult.vocabulary.sophistication.breakdown.find(b => b.group === WordFrequencyGroup.RARE)?.words;
+
+        return rareWords?.map(word => ({ text: word, category: null })) || [];
+    }
+
+    getHighlightedIssues(text: string): TextToken[] {
+        if (!this.evaluationResult) return []
+
+        // Get sorted issues
+        const sortedIssues = [...this.evaluationResult.correctness.issues]
+            .sort((a, b) => a.start_offset - b.start_offset);
+
+        let i = 0;
+        const tokenizedText: TextToken[] = [];
+        for (const issue of sortedIssues) {
+            const start = issue.start_offset;
+            const end = start + issue.error_length;
+
+            // Before adding a new token, check for overlaps
+            // Thus only going to show one issue per "window"
+            if (i < start) {
+                tokenizedText.push({ text: text.slice(i, start), category: null });
+            }
+            tokenizedText.push({ text: text.slice(start, end), category: issue.category });
+            i = end;
+        }
+        if (i < text.length) {
+            tokenizedText.push({ text: text.slice(i), category: null })
+        }
+        return tokenizedText;
     }
 }
