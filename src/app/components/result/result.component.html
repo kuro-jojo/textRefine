@@ -8,9 +8,12 @@
                 [sophisticationLevel]="
                     evaluationResult.vocabulary.sophistication.level
                 "
+                [sophisticationColor]="
+                    getScoreColor(evaluationResult.vocabulary.sophistication.score).all
+                "
                 [wordCount]="evaluationResult.vocabulary.precision.word_count"
-                [uniqueCount]="
-                    evaluationResult.vocabulary.lexical_diversity.unique_count
+                [rareWordCount]="
+                    evaluationResult.vocabulary.sophistication.rare_count
                 "
             ></app-overall-score>
         </div>
