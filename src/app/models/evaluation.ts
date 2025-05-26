@@ -1,9 +1,12 @@
+import { ErrorCategory, TextIssue } from "./issue";
+
 // Global Score Interface
 export interface EvaluationGlobalScore {
     score: number;
     score_in_percent: number;
     vocabulary: VocabularyResult;
     correctness: CorrectnessResult;
+    precision: PrecisionResult;
 }
 
 // Vocabulary Result
@@ -21,6 +24,7 @@ export interface SophisticationResult {
     common_count: number;
     mid_count: number;
     rare_count: number;
+    unknown_count: number;
     level: SophisticationLevel;
     breakdown: SophisticationScoreBreakdown[];
 }
@@ -42,10 +46,10 @@ export interface SophisticationScoreBreakdown {
 
 // Word Frequency Group
 export enum WordFrequencyGroup {
-    COMMON = 'COMMON',
-    MID = 'MID',
-    RARE = 'RARE',
-    UNKNOWN = 'UNKNOWN'
+    COMMON = 'Common',
+    MID = 'Mid',
+    RARE = 'Rare',
+    UNKNOWN = 'Unknown'
 }
 
 // Precision Result
@@ -63,23 +67,6 @@ export interface PrecisionScoreBreakdown {
     category: ErrorCategory;
     count: number;
     penalty: number;
-}
-
-// Error Category
-export enum ErrorCategory {
-    SPELLING_TYPING = 'SPELLING_TYPING',
-    GRAMMAR = 'GRAMMAR',
-    STYLE = 'STYLE',
-    WORD_USAGE = 'WORD_USAGE',
-    STYLISTIC_ISSUES = 'STYLISTIC_ISSUES'
-}
-
-// Text Issue
-export interface TextIssue {
-    category: ErrorCategory;
-    start_offset: number;
-    end_offset: number;
-    replacements: string[];
 }
 
 // Lexical Diversity Result
@@ -104,9 +91,4 @@ export interface CorrectnessScoreBreakdown {
     category: ErrorCategory;
     count: number;
     penalty: number;
-}
-
-// Input Text Interface
-export interface TextInput {
-    text: string;
 }

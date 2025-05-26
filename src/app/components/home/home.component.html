@@ -1,192 +1,157 @@
-<div class="bg-gray-50 font-sans">
-  <header id="header" class="bg-white shadow-sm py-4">
-    <div class="container mx-auto px-4 flex justify-between items-center">
-      <div class="flex items-center">
-        <h1 class="text-xl font-semibold text-gray-800">TextRefine</h1>
-      </div>
-      <div class="flex items-center space-x-4">
-        <button class="text-gray-600 hover:text-gray-800">
-          <i class="fa-solid fa-circle-question"></i>
-          <span class="ml-1 hidden sm:inline">Help</span>
-        </button>
-        <button class="text-gray-600 hover:text-gray-800">
-          <i class="fa-solid fa-user"></i>
-          <span class="ml-1 hidden sm:inline">Account</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <main id="main-content" class="container mx-auto px-4 py-8 max-w-4xl">
+<main id="main-content" class="container mx-auto px-4 py-8 max-w-4xl">
     <section id="hero-section" class="text-center mb-8">
-      <h2 class="text-3xl font-bold text-gray-800 mb-2">Analyze Your Text</h2>
-      <p class="text-gray-600 max-w-2xl mx-auto">
-        Enter your text below and get a comprehensive analysis of grammar,
-        vocabulary, and style.
-      </p>
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">Analyze Your Text</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">
+            Enter your text below and get a comprehensive analysis of grammar,
+            vocabulary, and style.
+        </p>
     </section>
 
     <section id="editor-section" class="mb-8">
-      <div class="space-y-4">
-        <app-text-editor></app-text-editor>
-      </div>
+        <div class="space-y-4">
+            <app-text-editor></app-text-editor>
+        </div>
     </section>
 
     <section id="info-section" class="mb-8">
-      <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div
-          id="info-header"
-          class="flex justify-between items-center p-4 cursor-pointer bg-gray-50 border-b border-gray-200"
-        >
-          <h3 class="text-lg font-semibold text-gray-800">
-            What does this tool evaluate?
-          </h3>
-          <i
-            id="toggle-icon"
-            class="text-gray-600 fa-solid fa-chevron-down"
-          ></i>
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div
+                id="info-header"
+                class="flex justify-between items-center p-4 cursor-pointer bg-gray-50 border-b border-gray-200"
+            >
+                <h3 class="text-lg font-semibold text-gray-800">
+                    What does this tool evaluate?
+                </h3>
+                <i
+                    id="toggle-icon"
+                    class="text-gray-600 fa-solid fa-chevron-down"
+                ></i>
+            </div>
+
+            <div id="info-content" class="p-4 hidden">
+                <div class="mb-4">
+                    <h4 class="font-semibold text-gray-800 mb-2">
+                        <i
+                            class="text-primary-600 mr-2 fa-solid fa-magnifying-glass"
+                        ></i>
+                        Text Analysis Tool Overview
+                    </h4>
+                    <p class="text-gray-700 mb-4">
+                        This tool evaluates your text across multiple linguistic
+                        dimensions to provide a deep and actionable assessment
+                        of writing quality.
+                    </p>
+                </div>
+
+                <h4 class="font-semibold text-gray-800 mb-2">
+                    Key evaluations performed:
+                </h4>
+
+                <div class="space-y-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0 mr-3">
+                            <span class="text-xl text-yellow-500">✨</span>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold text-gray-800">
+                                Vocabulary Sophistication
+                            </h5>
+                            <p class="text-gray-700">
+                                Measures how advanced and diverse your word
+                                choices are. It recognizes rare, mid-frequency,
+                                and common words, and adjusts scores based on
+                                meaningful word ratios.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex">
+                        <div class="flex-shrink-0 mr-3">
+                            <span class="text-xl text-red-500">🎯</span>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold text-gray-800">
+                                Precision of Language
+                            </h5>
+                            <p class="text-gray-700">
+                                Detects stylistic and word usage issues. It
+                                penalizes vague, incorrect, or informal word
+                                choices, helping you write with more clarity and
+                                intent.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex">
+                        <div class="flex-shrink-0 mr-3">
+                            <span class="text-xl text-blue-500">🛡️</span>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold text-gray-800">
+                                Correctness
+                            </h5>
+                            <p class="text-gray-700">
+                                Identifies grammar, spelling, and structural
+                                errors. These are categorized and weighted to
+                                reflect their impact on readability.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-gray-200">
+                    <p class="text-gray-700">
+                        Results are easy to interpret, with visual breakdowns
+                        and improvement suggestions. Perfect for students,
+                        professionals, or anyone aiming to write better, clearer
+                        English.
+                    </p>
+                </div>
+            </div>
         </div>
-
-        <div id="info-content" class="p-4 hidden">
-          <div class="mb-4">
-            <h4 class="font-semibold text-gray-800 mb-2">
-              <i class="text-primary-600 mr-2 fa-solid fa-magnifying-glass"></i>
-              Text Analysis Tool Overview
-            </h4>
-            <p class="text-gray-700 mb-4">
-              This tool evaluates your text across multiple linguistic
-              dimensions to provide a deep and actionable assessment of writing
-              quality.
-            </p>
-          </div>
-
-          <h4 class="font-semibold text-gray-800 mb-2">
-            Key evaluations performed:
-          </h4>
-
-          <div class="space-y-4">
-            <div class="flex">
-              <div class="flex-shrink-0 mr-3">
-                <span class="text-xl text-yellow-500">✨</span>
-              </div>
-              <div>
-                <h5 class="font-semibold text-gray-800">
-                  Vocabulary Sophistication
-                </h5>
-                <p class="text-gray-700">
-                  Measures how advanced and diverse your word choices are. It
-                  recognizes rare, mid-frequency, and common words, and adjusts
-                  scores based on meaningful word ratios.
-                </p>
-              </div>
-            </div>
-
-            <div class="flex">
-              <div class="flex-shrink-0 mr-3">
-                <span class="text-xl text-red-500">🎯</span>
-              </div>
-              <div>
-                <h5 class="font-semibold text-gray-800">
-                  Precision of Language
-                </h5>
-                <p class="text-gray-700">
-                  Detects stylistic and word usage issues. It penalizes vague,
-                  incorrect, or informal word choices, helping you write with
-                  more clarity and intent.
-                </p>
-              </div>
-            </div>
-
-            <div class="flex">
-              <div class="flex-shrink-0 mr-3">
-                <span class="text-xl text-blue-500">🛡️</span>
-              </div>
-              <div>
-                <h5 class="font-semibold text-gray-800">Correctness</h5>
-                <p class="text-gray-700">
-                  Identifies grammar, spelling, and structural errors. These are
-                  categorized and weighted to reflect their impact on
-                  readability.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-4 pt-4 border-t border-gray-200">
-            <p class="text-gray-700">
-              Results are easy to interpret, with visual breakdowns and
-              improvement suggestions. Perfect for students, professionals, or
-              anyone aiming to write better, clearer English.
-            </p>
-          </div>
-        </div>
-      </div>
     </section>
 
     <section
-      id="features-section"
-      class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+        id="features-section"
+        class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
     >
-      <div class="bg-white rounded-lg shadow-sm p-6 text-center">
-        <div class="text-primary-600 text-3xl mb-4">
-          <i class="fa-solid fa-spell-check"></i>
+        <div class="bg-white rounded-lg shadow-sm p-6 text-center">
+            <div class="text-primary-600 text-3xl mb-4">
+                <i class="fa-solid fa-spell-check"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                Grammar &amp; Spelling
+            </h3>
+            <p class="text-gray-600">
+                Identify and correct grammar, punctuation, and spelling errors
+                in your text.
+            </p>
         </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-2">
-          Grammar &amp; Spelling
-        </h3>
-        <p class="text-gray-600">
-          Identify and correct grammar, punctuation, and spelling errors in your
-          text.
-        </p>
-      </div>
 
-      <div class="bg-white rounded-lg shadow-sm p-6 text-center">
-        <div class="text-primary-600 text-3xl mb-4">
-          <i class="fa-solid fa-book"></i>
+        <div class="bg-white rounded-lg shadow-sm p-6 text-center">
+            <div class="text-primary-600 text-3xl mb-4">
+                <i class="fa-solid fa-book"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                Vocabulary Analysis
+            </h3>
+            <p class="text-gray-600">
+                Evaluate the richness and diversity of your vocabulary and word
+                choices.
+            </p>
         </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-2">
-          Vocabulary Analysis
-        </h3>
-        <p class="text-gray-600">
-          Evaluate the richness and diversity of your vocabulary and word
-          choices.
-        </p>
-      </div>
 
-      <div class="bg-white rounded-lg shadow-sm p-6 text-center">
-        <div class="text-primary-600 text-3xl mb-4">
-          <i class="fa-solid fa-chart-line"></i>
+        <div class="bg-white rounded-lg shadow-sm p-6 text-center">
+            <div class="text-primary-600 text-3xl mb-4">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                Readability Metrics
+            </h3>
+            <p class="text-gray-600">
+                Get insights on the readability and complexity of your writing
+                style.
+            </p>
         </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-2">
-          Readability Metrics
-        </h3>
-        <p class="text-gray-600">
-          Get insights on the readability and complexity of your writing style.
-        </p>
-      </div>
     </section>
-  </main>
-
-  <footer id="footer" class="bg-white border-t border-gray-200 py-6">
-    <div class="container mx-auto px-4">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="mb-4 md:mb-0">
-          <p class="text-gray-600 text-sm">
-            © 2025 TextRefine. All rights reserved.
-          </p>
-        </div>
-        <div class="flex space-x-6">
-          <span class="text-gray-600 hover:text-gray-800 text-sm cursor-pointer"
-            >Privacy Policy</span
-          >
-          <span class="text-gray-600 hover:text-gray-800 text-sm cursor-pointer"
-            >Terms of Service</span
-          >
-          <span class="text-gray-600 hover:text-gray-800 text-sm cursor-pointer"
-            >Contact Us</span
-          >
-        </div>
-      </div>
-    </div>
-  </footer>
-</div>
+</main>

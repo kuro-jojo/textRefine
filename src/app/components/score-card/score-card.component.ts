@@ -14,20 +14,13 @@ export class ScoreCardComponent {
   @Input() level: string | null = null;
 
   constructor() {
-    // Required for strict initialization
   }
 
-  getScoreColor(score: number | null | undefined): { text: string; bg: string; all: string; } {
-    return getScoreColor(score);
-  }
+  getScoreColor = getScoreColor;
 
-  getScoreInPercentage(score: number | null | undefined): string {
-    return getScoreInPercentage(score);
-  }
+  getScoreInPercentage = getScoreInPercentage;
 
-  getScoreText(score: number | null | undefined): string {
-    return getScoreText(score);
-  }
+  getScoreText = getScoreText;
 
   getScoreWidth(score: number | null | undefined): string {
     return score ? `${score * 100}%` : '0%';

@@ -1,299 +1,158 @@
 <main class="p-6 mx-auto container">
-  <!-- Results Panel (Right) -->
-  <div id="results-panel" class="w-full flex flex-col gap-6">
-    <!-- Overall Score -->
-    <div *ngIf="evaluationResult">
-      <app-overall-score
-        [score]="evaluationResult.score"
-        [sophisticationLevel]="evaluationResult.vocabulary.sophistication.level"
-        [wordCount]="evaluationResult.correctness.word_count"
-        [uniqueCount]="
-          evaluationResult.vocabulary.lexical_diversity.unique_count
-        "
-      ></app-overall-score>
-    </div>
-    <div *ngIf="error" class="bg-red-50 text-red-600 p-4 rounded-lg mb-4">
-      {{ error }}
-    </div>
+    <!-- Results Panel (Right) -->
+    <div id="results-panel" class="w-full flex flex-col gap-6">
+        <!-- Overall Score -->
+        <div *ngIf="evaluationResult">
+            <app-overall-score
+                [score]="evaluationResult.score"
+                [sophisticationLevel]="
+                    evaluationResult.vocabulary.sophistication.level
+                "
+                [wordCount]="evaluationResult.vocabulary.precision.word_count"
+                [uniqueCount]="
+                    evaluationResult.vocabulary.lexical_diversity.unique_count
+                "
+            ></app-overall-score>
+        </div>
+        <div *ngIf="error" class="bg-red-50 text-red-600 p-4 rounded-lg mb-4">
+            {{ error }}
+        </div>
 
-    <!-- Score Cards -->
-    <div
-      id="score-cards"
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6"
-    >
-      <!-- Correctness -->
-      <app-score-card
-        title="Correctness"
-        subtitle="Grammar & Spelling"
-        [score]="evaluationResult?.correctness?.score ?? null"
-        icon="check"
-      ></app-score-card>
+        <!-- Score Cards -->
+        <div
+            id="score-cards"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6"
+        >
+            <!-- Correctness -->
+            <app-score-card
+                title="Correctness"
+                subtitle="Grammar & Spelling"
+                [score]="evaluationResult?.correctness?.score ?? null"
+                icon="check"
+            ></app-score-card>
 
-      <!-- Sophistication -->
-      <app-score-card
-        title="Sophistication"
-        subtitle="Language Level"
-        [score]="evaluationResult?.vocabulary?.sophistication?.score ?? null"
-        [level]="evaluationResult?.vocabulary?.sophistication?.level ?? null"
-        icon="graduation-cap"
-      ></app-score-card>
+            <!-- Sophistication -->
+            <app-score-card
+                title="Sophistication"
+                subtitle="Language Level"
+                [score]="
+                    evaluationResult?.vocabulary?.sophistication?.score ?? null
+                "
+                [level]="
+                    evaluationResult?.vocabulary?.sophistication?.level ?? null
+                "
+                icon="graduation-cap"
+            ></app-score-card>
 
-      <!-- Precision -->
-      <app-score-card
-        title="Precision"
-        subtitle="Clarity & Conciseness"
-        [score]="evaluationResult?.vocabulary?.precision?.score ?? null"
-        icon="bullseye"
-      ></app-score-card>
+            <!-- Precision -->
+            <app-score-card
+                title="Precision"
+                subtitle="Clarity & Conciseness"
+                [score]="evaluationResult?.vocabulary?.precision?.score ?? null"
+                icon="bullseye"
+            ></app-score-card>
 
-      <!-- Vocabulary Diversity -->
-      <app-score-card
-        title="Lexical Diversity"
-        subtitle="Word Diversity"
-        [score]="evaluationResult?.vocabulary?.lexical_diversity?.ttr ?? null"
-        icon="book"
-      ></app-score-card>
+            <!-- Vocabulary Diversity -->
+            <app-score-card
+                title="Lexical Diversity"
+                subtitle="Word Diversity"
+                [score]="
+                    evaluationResult?.vocabulary?.lexical_diversity?.ttr ?? null
+                "
+                icon="book"
+            ></app-score-card>
 
-      <!-- Readability -->
-      <app-score-card
-        title="Readability"
-        subtitle="Ease of Reading"
-        [score]="evaluationResult?.vocabulary?.lexical_diversity?.ttr ?? null"
-        icon="book"
-      ></app-score-card>
-    </div>
+            <!-- Readability -->
+            <app-score-card
+                title="Readability (coming soon)"
+                subtitle="Ease of Reading"
+                [score]="null"
+                icon="book"
+            ></app-score-card>
+        </div>
 
-    <!-- Detailed Breakdown Tabs -->
-    <div id="detailed-breakdown" class="bg-white rounded-xl shadow-xl mb-6">
-      <div class="border-b">
-        <nav class="flex -mb-px">
-          <button
-            class="py-4 px-6 font-medium {{
-              getScoreColor(evaluationResult?.correctness?.score).text
-            }} border-b-2 border-primary-600"
-          >
-            <i class="fas fa-check mr-2"></i>Correctness
-          </button>
-          <button
-            class="py-4 px-6 font-medium {{
-              getScoreColor(evaluationResult?.vocabulary?.precision?.score).text
-            }} hover:text-gray-700"
-          >
-            <i class="mr-2 fas fa-bullseye"></i>Precision
-          </button>
-          <button
-            class="py-4 px-6 font-medium {{
-              getScoreColor(evaluationResult?.vocabulary?.sophistication?.score)
-                .text
-            }} hover:text-gray-700"
-          >
-            <i class="mr-2 fas fa-graduation-cap"></i>Sophistication
-          </button>
-          <button
-            class="py-4 px-6 font-medium {{
-              getScoreColor(evaluationResult?.vocabulary?.score).text
-            }} hover:text-gray-700"
-          >
-            <i class="mr-2 fas fa-book"></i>Vocabulary
-          </button>
-          <!-- <button
-            class="py-4 px-6 font-medium {{
-              getScoreColor(evaluationResult?.readability?.score).text
-            }} hover:text-gray-700"
-          >
-            <i class="mr-2 fas fa-glasses"></i>Readability
-          </button> -->
-        </nav>
-      </div>
-
-      <!-- Correctness Tab Content -->
-      <div id="correctness-tab" class="p-6">
-        <div class="mb-6">
-          <h3 class="text-lg font-semibold text-gray-800 mb-4">
-            Grammar &amp; Spelling Issues
-          </h3>
-          <div class="space-y-4">
-            <div class="flex items-start p-3 bg-red-50 rounded-lg">
-              <div
-                class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-3 flex-shrink-0"
-              >
-                <i class="fas fa-xmark text-red-600"></i>
-              </div>
-              <div>
-                <p class="font-medium text-gray-800">
-                  Missing comma in compound sentence
-                </p>
-                <p class="text-gray-600 mt-1">
-                  The research was comprehensive
-                  <span class="text-red-600 font-medium">but</span> the
-                  conclusions were limited.
-                </p>
-                <p class="text-sm text-gray-500 mt-1">
-                  Add a comma before the conjunction 'but' in a compound
-                  sentence.
-                </p>
-                <div class="mt-2">
-                  <span class="text-sm text-green-600 font-medium"
-                    >Suggestion:
-                  </span>
-                  <span class="text-sm"
-                    >The research was comprehensive<span
-                      class="text-green-600 font-medium"
-                      >,</span
+        <!-- Detailed Breakdown Tabs -->
+        <div
+            *ngIf="tabs.length === 0"
+            class="bg-white rounded-xl p-6 text-center text-gray-600 font-medium text-xl shadow-xl mb-6"
+        >
+            <p>No issues found</p>
+        </div>
+        <div
+            id="detailed-breakdown"
+            class="bg-white rounded-xl shadow-xl mb-6"
+            *ngIf="tabs.length > 0"
+        >
+            <div class="border-b">
+                <nav class="flex -mb-px overflow-x-auto">
+                    <button
+                        *ngFor="let tab of tabs"
+                        (click)="selectTab(tab.id)"
+                        class="py-4 px-6 font-medium {{
+                            getSelectedTabColor(tab.id).text
+                        }} hover:text-gray-700"
+                        [class.hover:text-gray-700]="!isTabSelected(tab.id)"
+                        [class.border-b-2]="isTabSelected(tab.id)"
+                        [class.border-primary-600]="isTabSelected(tab.id)"
                     >
-                    but the conclusions were limited.</span
-                  >
-                </div>
-              </div>
+                        <i class="mr-2 fas fa-{{ tab.icon }}"></i
+                        >{{ tab.title }}
+                    </button>
+                </nav>
             </div>
-
-            <div class="flex items-start p-3 bg-yellow-50 rounded-lg">
-              <div
-                class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center mr-3 flex-shrink-0"
-              >
-                <i class="fas fa-exclamation text-yellow-600"></i>
-              </div>
-              <div>
-                <p class="font-medium text-gray-800">Subject-verb agreement</p>
-                <p class="text-gray-600 mt-1">
-                  The team of researchers
-                  <span class="text-yellow-600 font-medium">were</span>
-                  analyzing the data.
-                </p>
-                <p class="text-sm text-gray-500 mt-1">
-                  'Team' is a singular collective noun and should take a
-                  singular verb.
-                </p>
-                <div class="mt-2">
-                  <span class="text-sm text-green-600 font-medium"
-                    >Suggestion:
-                  </span>
-                  <span class="text-sm"
-                    >The team of researchers
-                    <span class="text-green-600 font-medium">was</span>
-                    analyzing the data.</span
-                  >
+            <div id="breakdown-content">
+                <!-- Correctness Panel -->
+                <div
+                    id="breakdown-panel-correctness"
+                    class="accordion-content"
+                    *ngIf="selectedTab === 'correctness'"
+                >
+                    <app-correctness-panel
+                        [correctnessResult]="correctnessResult"
+                        [text]="editorContent"
+                    ></app-correctness-panel>
                 </div>
-              </div>
-            </div>
-
-            <div class="flex items-start p-3 bg-yellow-50 rounded-lg">
-              <div
-                class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center mr-3 flex-shrink-0"
-              >
-                <i class="fas fa-exclamation text-yellow-600"></i>
-              </div>
-              <div>
-                <p class="font-medium text-gray-800">Commonly confused words</p>
-                <p class="text-gray-600 mt-1">
-                  The study had a significant
-                  <span class="text-yellow-600 font-medium">affect</span> on
-                  subsequent research.
-                </p>
-                <p class="text-sm text-gray-500 mt-1">
-                  'Affect' is typically used as a verb. As a noun, 'effect' is
-                  more appropriate here.
-                </p>
-                <div class="mt-2">
-                  <span class="text-sm text-green-600 font-medium"
-                    >Suggestion:
-                  </span>
-                  <span class="text-sm"
-                    >The study had a significant
-                    <span class="text-green-600 font-medium">effect</span> on
-                    subsequent research.</span
-                  >
+                <!-- Precision Panel -->
+                <div
+                    id="breakdown-panel-precision"
+                    class="accordion-content p-0 show"
+                    *ngIf="selectedTab === 'precision'"
+                >
+                    <app-precision-panel
+                        [precisionResult]="precisionResult"
+                        [text]="editorContent"
+                    ></app-precision-panel>
                 </div>
-              </div>
+                <div
+                    id="breakdown-panel-sophistication"
+                    class="accordion-content p-6 show"
+                    *ngIf="selectedTab === 'sophistication'"
+                >
+                    <!-- Sophistication Panel -->
+                    <app-sophistication-panel
+                        [sophisticationResult]="sophisticationResult"
+                        [text]="editorContent"
+                    ></app-sophistication-panel>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
+        <!-- Text Highlights View -->
+        <div id="text-highlights" class="bg-white rounded-lg shadow-sm p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                Text with Highlights
+            </h3>
+            <div
+                class="p-4 bg-gray-50 rounded-lg border border-gray-200 max-w-none break-words"
+                [innerHTML]="highlightedText"
+            ></div>
+            <div class="mt-4 flex flex-wrap gap-4">
+                <div class="flex items-center" *ngFor="let category of categories">
+                    <span class="w-3 h-3 {{ categoryColors[category] }} rounded mr-2"></span>
+                    <span class="text-sm text-gray-600"
+                        >{{ category }}</span
+                    >
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!-- Text Highlights View -->
-    <div id="text-highlights" class="bg-white rounded-lg shadow-sm p-6">
-      <h3 class="text-lg font-semibold text-gray-800 mb-4">
-        Text with Highlights
-      </h3>
-      <div
-        class="p-4 bg-gray-50 rounded-lg border border-gray-200 prose max-w-none"
-      >
-        <p>
-          The principles of human-centered design have proven to be effective
-          and productive. However, its approach is generally used in situations
-          where professionals determine the needs of the target populations and
-          then develop products and procedures to address
-          <span
-            class="bg-yellow-100 cursor-help border-b border-dashed border-yellow-400"
-            title="Vague reference - Consider specifying which needs are being addressed"
-            >the needs</span
-          >. This is Top-Down design: starting with higher-level
-          conceptualizations and then refining the ideas and concepts to
-          specific instances of products or services. This works well for
-          <span
-            class="bg-red-100 cursor-help border-b border-dashed border-red-400"
-            title="Missing hyphen in compound adjective - Should be 'mass-produced'"
-            >mass produced</span
-          >
-          items which only allows limited specialization for individual needs
-          and requirements.
-        </p>
-        <p>
-          The research was comprehensive
-          <span
-            class="bg-red-100 cursor-help border-b border-dashed border-red-400"
-            title="Missing comma in compound sentence - Add a comma before 'but'"
-            >but</span
-          >
-          the conclusions were limited. The team of researchers
-          <span
-            class="bg-yellow-100 cursor-help border-b border-dashed border-yellow-400"
-            title="Subject-verb agreement error - 'Team' is singular and should take 'was'"
-            >were</span
-          >
-          analyzing the data. The study had a significant
-          <span
-            class="bg-red-100 cursor-help border-b border-dashed border-red-400"
-            title="Incorrect word usage - Use 'effect' (noun) instead of 'affect' (verb)"
-            >affect</span
-          >
-          on subsequent research.
-        </p>
-        <p>
-          The
-          <span
-            class="bg-blue-100 cursor-help border-b border-dashed border-blue-400"
-            title="Advanced vocabulary - Consider if this term is appropriate for your audience"
-            >methodology</span
-          >
-          employed in this study represents a
-          <span
-            class="bg-blue-100 cursor-help border-b border-dashed border-blue-400"
-            title="Advanced vocabulary - A more common alternative could be 'significant'"
-            >substantial</span
-          >
-          departure from conventional approaches to the subject matter.
-        </p>
-      </div>
-      <div class="mt-4 flex flex-wrap gap-4">
-        <div class="flex items-center">
-          <span class="w-3 h-3 bg-red-100 rounded mr-2"></span>
-          <span class="text-sm text-gray-600">Grammar &amp; Spelling</span>
-        </div>
-        <div class="flex items-center">
-          <span class="w-3 h-3 bg-yellow-100 rounded mr-2"></span>
-          <span class="text-sm text-gray-600">Clarity &amp; Precision</span>
-        </div>
-        <div class="flex items-center">
-          <span class="w-3 h-3 bg-blue-100 rounded mr-2"></span>
-          <span class="text-sm text-gray-600">Advanced Vocabulary</span>
-        </div>
-        <div class="flex items-center">
-          <span class="w-3 h-3 bg-green-100 rounded mr-2"></span>
-          <span class="text-sm text-gray-600">Well-constructed</span>
-        </div>
-      </div>
-    </div>
-  </div>
 </main>

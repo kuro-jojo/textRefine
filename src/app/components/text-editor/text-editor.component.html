@@ -1,46 +1,60 @@
 <div
-  *ngIf="error && !isEvaluating"
-  class="text-red-500 text-sm bg-red-100 text-center p-4 rounded mb-4"
+    *ngIf="error && !isEvaluating"
+    class="text-red-500 text-sm bg-red-100 text-center p-4 rounded mb-4"
 >
-  {{ error }}
+    {{ error }}
+</div>
+<div
+    *ngIf="info"
+    class="text-blue-500 text-sm bg-blue-100 text-center p-4 rounded mb-4"
+>
+    {{ info }}
 </div>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div class="bg-white rounded-lg shadow-md p-4">
-    <div class="NgxEditor__Wrapper">
-      <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"> </ngx-editor-menu>
-      <ngx-editor
-        [editor]="editor"
-        formControlName="editorContent"
-        [placeholder]="'Type here...'"
-      ></ngx-editor>
-    </div>
-
-    <app-word-counter
-      [wordCount]="wordCount"
-      [charCount]="charCount"
-    ></app-word-counter>
-
-    <!-- Analyze Button / Progress Bar -->
-    <div class="w-full">
-      <button
-        *ngIf="!isEvaluating"
-        [disabled]="form.invalid"
-        type="submit"
-        class="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition duration-200 flex items-center justify-center cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-400"
-      >
-        <i class="mr-2 fa-solid fa-magnifying-glass"></i>
-        Analyze Text
-      </button>
-
-      <div *ngIf="isEvaluating" class="w-full">
-        <div class="progress-bar">
-          <div
-            class="progress-bar-fill"
-            [ngStyle]="{ width: progress + '%' }"
-          ></div>
+    <div class="bg-white rounded-lg shadow-md p-4">
+        <div class="NgxEditor__Wrapper">
+            <ngx-editor-menu [editor]="editor" [toolbar]="toolbar">
+            </ngx-editor-menu>
+            <ngx-editor
+                [editor]="editor"
+                formControlName="editorContent"
+                [placeholder]="'Type here...'"
+            ></ngx-editor>
         </div>
-        <p class="progress-text">{{ currentStep }}</p>
-      </div>
+
+        <app-word-counter
+            [wordCount]="wordCount"
+            [charCount]="charCount"
+        ></app-word-counter>
+
+        <!-- Analyze Button / Progress Bar -->
+        <div class="w-full">
+            <div
+                *ngIf="!isEvaluating && form.invalid"
+                class="text-blue-500 text-sm my-2"
+            >
+                <i class="fa-solid fa-circle-exclamation"></i>
+                At least {{ MIN_WORDS }} words are required
+            </div>
+            <button
+                *ngIf="!isEvaluating"
+                [disabled]="form.invalid"
+                type="submit"
+                class="w-full py-3 bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-lg transition duration-200 flex items-center justify-center cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-400"
+            >
+                <i class="mr-2 fa-solid fa-magnifying-glass"></i>
+                Analyze Text
+            </button>
+
+            <div *ngIf="isEvaluating" class="w-full">
+                <div class="progress-bar">
+                    <div
+                        class="progress-bar-fill"
+                        [ngStyle]="{ width: progress + '%' }"
+                    ></div>
+                </div>
+                <p class="progress-text">{{ currentStep }}</p>
+            </div>
+        </div>
     </div>
-  </div>
 </form>

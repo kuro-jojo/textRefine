@@ -1,0 +1,357 @@
+<div class="flex flex-col gap-6">
+    <div
+        id="sophistication-summary-card"
+        class="mb-6 rounded-lg {{
+            getScoreColor(sophisticationResult?.score).all
+        }} p-5 flex flex-col md:flex-row md:items-center gap-6"
+    >
+        <div class="flex-1 flex flex-row items-center gap-4">
+            <div class="flex items-center">
+                <div
+                    class="w-16 h-16 rounded-full flex items-center justify-center text-3xl font-bold border-2 {{
+                        getScoreColor(sophisticationResult?.score).all
+                    }} relative group"
+                >
+                    {{ getScoreInPercentage(sophisticationResult?.score) }}
+                </div>
+            </div>
+            <div>
+                <div
+                    class="text-lg font-semibold {{
+                        getScoreColor(sophisticationResult?.score).text
+                    }} flex items-center gap-2"
+                >
+                    {{ sophisticationResult?.level }}
+                    <i
+                        class="text-blue-400 text-xl fa-solid fa-arrow-trend-up"
+                    ></i>
+                </div>
+            </div>
+        </div>
+        <div class="flex-1 mt-4 md:mt-0 flex flex-col gap-2">
+            <div class="flex flex-wrap items-center gap-4 text-sm">
+                <span class="flex items-center gap-2">
+                    <i class="text-blue-400 text-xl fa-solid fa-language"></i>
+                    <span class="font-semibold text-gray-700">{{
+                        sophisticationResult?.word_count
+                    }}</span>
+                    <span class="text-gray-500">words analyzed</span>
+                    <app-tooltip
+                        tooltipText="Only meaningful content is counted (e.g. excluding stop words)."
+                    ></app-tooltip>
+                </span>
+                <span class="flex items-center gap-1">
+                    <span
+                        class="w-2 h-2 rounded-full {{
+                            colors.common[0]
+                        }} inline-block"
+                    ></span>
+                    <span class="font-semibold {{ colors.common[1] }}">{{
+                        sophisticationResult?.common_count
+                    }}</span>
+                    <span class="text-gray-500">Common</span>
+                </span>
+                <span class="flex items-center gap-1">
+                    <span
+                        class="w-2 h-2 rounded-full {{
+                            colors.mid[0]
+                        }} inline-block"
+                    ></span>
+                    <span class="font-semibold {{ colors.mid[1] }}">{{
+                        sophisticationResult?.mid_count
+                    }}</span>
+                    <span class="text-gray-500">Mid</span>
+                </span>
+                <span class="flex items-center gap-1">
+                    <span
+                        class="w-2 h-2 rounded-full {{
+                            colors.rare[0]
+                        }} inline-block"
+                    ></span>
+                    <span class="font-semibold {{ colors.rare[1] }}">{{
+                        sophisticationResult?.rare_count
+                    }}</span>
+                    <span class="text-gray-500">Rare</span>
+                </span>
+                <span class="flex items-center gap-1">
+                    <span
+                        class="w-2 h-2 rounded-full {{
+                            colors.unknown[0]
+                        }} inline-block"
+                    ></span>
+                    <span class="font-semibold {{ colors.unknown[1] }}">{{
+                        sophisticationResult?.unknown_count
+                    }}</span>
+                    <span class="text-gray-500">Unknown</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-col gap-2 mb-6">
+        <div class="flex items-center gap-2">
+            <i class="text-blue-500 text-xl fa-solid fa-lightbulb"></i>
+            <div class="text-lg font-medium text-gray-700">
+                Sophistication Analysis
+                <app-tooltip
+                    tooltipText="Sophistication score is weighted by presence of mid/rare vocabulary, adjusted for ratio of meaningful content vs. total words. Common/unknown words lower the score."
+                ></app-tooltip>
+            </div>
+        </div>
+        <div class="mt-2 text-stone-500 text-sm">
+            <div *ngIf="sophisticationFeedback" class="flex items-center gap-2">
+                <i [ngClass]="sophisticationFeedback.iconClass"></i>
+                <span>{{ sophisticationFeedback.message }}</span>
+            </div>
+        </div>
+    </div>
+    <!-- Horizontal Stacked Bar Chart -->
+    <div id="sophistication-bar-chart-container" class="flex flex-col gap-3">
+        <div
+            class="flex flex-col gap-5 sm:flex-row justify-between items-center mb-2"
+        >
+            <div
+                class="text-sm text-gray-700 font-semibold flex items-center gap-2"
+            >
+                <i class="text-blue-500 text-xl fa-solid fa-bars-progress"></i>
+                Word Distribution
+            </div>
+            <div class="text-xs text-gray-400 flex gap-4">
+                <span class="flex items-center gap-1"
+                    ><span
+                        class="w-3 h-3 rounded {{
+                            colors.common[0]
+                        }} inline-block"
+                    ></span>
+                    Common</span
+                >
+                <span class="flex items-center gap-1"
+                    ><span
+                        class="w-3 h-3 rounded {{ colors.mid[0] }} inline-block"
+                    ></span>
+                    Mid</span
+                >
+                <span class="flex items-center gap-1"
+                    ><span
+                        class="w-3 h-3 rounded {{
+                            colors.rare[0]
+                        }} inline-block"
+                    ></span>
+                    Rare</span
+                >
+                <span class="flex items-center gap-1"
+                    ><span
+                        class="w-3 h-3 rounded {{
+                            colors.unknown[0]
+                        }} inline-block"
+                    ></span>
+                    Unknown</span
+                >
+            </div>
+        </div>
+        <div
+            class="w-full h-6 rounded-lg overflow-hidden bg-gray-200 flex"
+            style="height: 2.25rem"
+        >
+            <div
+                class="{{ colors.common[0] }} h-full text-xs {{
+                    colors.common[1]
+                }} flex justify-center items-center"
+                [style.width]="
+                    getPercentage(
+                        sophisticationResult?.common_count,
+                        sophisticationResult?.word_count
+                    ) + '%'
+                "
+            >
+                <span *ngIf="sophisticationResult?.common_count">{{
+                    sophisticationResult?.common_count
+                }}</span>
+            </div>
+            <div
+                class="{{ colors.mid[0] }} h-full text-xs {{
+                    colors.mid[1]
+                }} flex justify-center items-center"
+                [style.width]="
+                    getPercentage(
+                        sophisticationResult?.mid_count,
+                        sophisticationResult?.word_count
+                    ) + '%'
+                "
+            >
+                <span *ngIf="sophisticationResult?.mid_count">{{
+                    sophisticationResult?.mid_count
+                }}</span>
+            </div>
+            <div
+                class="{{ colors.rare[0] }} h-full text-xs {{
+                    colors.rare[1]
+                }} flex justify-center items-center"
+                [style.width]="
+                    getPercentage(
+                        sophisticationResult?.rare_count,
+                        sophisticationResult?.word_count
+                    ) + '%'
+                "
+            >
+                <span *ngIf="sophisticationResult?.rare_count">{{
+                    sophisticationResult?.rare_count
+                }}</span>
+            </div>
+            <div
+                class="{{ colors.unknown[0] }} h-full text-xs {{
+                    colors.unknown[1]
+                }} flex justify-center items-center"
+                [style.width]="
+                    getPercentage(
+                        sophisticationResult?.unknown_count,
+                        sophisticationResult?.word_count
+                    ) + '%'
+                "
+            >
+                <span *ngIf="sophisticationResult?.unknown_count">{{
+                    sophisticationResult?.unknown_count
+                }}</span>
+            </div>
+        </div>
+    </div>
+    <!-- Word Chips by Category -->
+    <div id="sophistication-word-chips" class="mb-8">
+        <div class="grid md:grid-cols-4 gap-4">
+            <!-- Common Words -->
+            <div *ngIf="sophisticationResult?.common_count">
+                <div
+                    class="flex items-center gap-2 mb-2 text-xs font-semibold {{
+                        colors.common[1]
+                    }}"
+                >
+                    <span
+                        class="w-2.5 h-2.5 rounded-full {{
+                            colors.common[0]
+                        }} inline-block"
+                    ></span>
+                    Common
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <span
+                        *ngFor="let word of getShownWords('common')"
+                        class="px-2 py-1 {{
+                            colors.common[0]
+                        }} rounded-full text-xs font-medium group relative cursor-default"
+                        >{{ word }}
+                    </span>
+                    <span
+                        *ngIf="getShowMoreText('common')"
+                        (click)="toggleShowAll('common')"
+                        class="py-1 {{
+                            colors.common[1]
+                        }} text-xs cursor-pointer hover:underline"
+                    >
+                        {{ getShowMoreText("common") }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Mid-Frequency Words -->
+            <div *ngIf="sophisticationResult?.mid_count">
+                <div
+                    class="flex items-center gap-2 mb-2 text-xs font-semibold {{
+                        colors.mid[1]
+                    }}"
+                >
+                    <span
+                        class="w-2.5 h-2.5 rounded-full {{
+                            colors.mid[0]
+                        }} inline-block"
+                    ></span>
+                    Mid
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <span
+                        *ngFor="let word of getShownWords('mid')"
+                        class="px-2 py-1 {{
+                            colors.mid[0]
+                        }} rounded-full text-xs font-medium group relative cursor-default"
+                        >{{ word }}
+                    </span>
+                    <span
+                        *ngIf="getShowMoreText('mid')"
+                        (click)="toggleShowAll('mid')"
+                        class="py-1 {{
+                            colors.mid[1]
+                        }} text-xs cursor-pointer hover:underline"
+                    >
+                        {{ getShowMoreText("mid") }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Rare Words -->
+            <div *ngIf="sophisticationResult?.rare_count">
+                <div
+                    class="flex items-center gap-2 mb-2 text-xs font-semibold {{
+                        colors.rare[1]
+                    }}"
+                >
+                    <span
+                        class="w-2.5 h-2.5 rounded-full {{
+                            colors.rare[0]
+                        }} inline-block"
+                    ></span>
+                    Rare
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <span
+                        *ngFor="let word of getShownWords('rare')"
+                        class="px-2 py-1 {{
+                            colors.rare[0]
+                        }} rounded-full text-xs font-medium group relative cursor-default"
+                        >{{ word }}
+                    </span>
+                    <span
+                        *ngIf="getShowMoreText('rare')"
+                        (click)="toggleShowAll('rare')"
+                        class="py-1 {{
+                            colors.rare[1]
+                        }} text-xs cursor-pointer hover:underline"
+                    >
+                        {{ getShowMoreText("rare") }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Unknown Words -->
+            <div *ngIf="sophisticationResult?.unknown_count">
+                <div
+                    class="flex items-center gap-2 mb-2 text-xs font-semibold {{
+                        colors.unknown[1]
+                    }}"
+                >
+                    <span
+                        class="w-2.5 h-2.5 rounded-full {{
+                            colors.unknown[0]
+                        }} inline-block"
+                    ></span>
+                    Unknown
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <span
+                        *ngFor="let word of getShownWords('unknown')"
+                        class="px-2 py-1 {{
+                            colors.unknown[0]
+                        }} rounded-full text-xs font-medium group relative cursor-default"
+                        >{{ word }}
+                    </span>
+                    <span
+                        *ngIf="getShowMoreText('unknown')"
+                        (click)="toggleShowAll('unknown')"
+                        class="py-1 {{
+                            colors.unknown[1]
+                        }} text-xs cursor-pointer hover:underline"
+                    >
+                        {{ getShowMoreText("unknown") }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

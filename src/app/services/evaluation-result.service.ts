@@ -3,27 +3,27 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { EvaluationGlobalScore } from '../models/evaluation';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class EvaluationResultService {
-  private _evaluationResult = new BehaviorSubject<EvaluationGlobalScore | null>(null);
-  private _rawText = new BehaviorSubject<string>('');
+    private _evaluationResult = new BehaviorSubject<EvaluationGlobalScore | null>(null);
+    private _editorInfo = new BehaviorSubject<string | null>(null);
 
-  constructor() { }
+    constructor() { }
 
-  setEvaluationResult(result: EvaluationGlobalScore): void {
-    this._evaluationResult.next(result);
-  }
+    setEvaluationResult(result: EvaluationGlobalScore): void {
+        this._evaluationResult.next(result);
+    }
 
-  getEvaluationResult(): Observable<EvaluationGlobalScore | null> {
-    return this._evaluationResult.asObservable();
-  }
+    getEvaluationResult(): Observable<EvaluationGlobalScore | null> {
+        return this._evaluationResult.asObservable();
+    }
 
-  setRawText(text: string): void {
-    this._rawText.next(text);
-  }
+    setEditorContent(editorContent: string): void {
+        this._editorInfo.next(editorContent);
+    }
 
-  getRawText(): Observable<string> {
-    return this._rawText.asObservable();
-  }
+    getEditorInfo(): Observable<string | null> {
+        return this._editorInfo.asObservable();
+    }
 }

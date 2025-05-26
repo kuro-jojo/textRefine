@@ -1,12 +1,50 @@
-@import "@fortawesome/fontawesome-free/css/all.css";
-@import "./styles/tailwind-colors.css";
-
 @import "tailwindcss";
-
-@theme {
-  --color-primary-600: rgb(2 132 199);
-}
+@import "@fortawesome/fontawesome-free/css/all.css";
+/* @import "./styles/tailwind-colors.css"; */
 
 .NgxEditor__Content {
-  min-height: 400px; /* make all of the editor area clickable */
+    min-height: 400px; /* make all of the editor area clickable */
+}
+
+@layer base {
+    h1 {
+        font-size: var(--text-2xl);
+        font-weight: bold;
+        margin: .61rem 0;
+    }
+
+    h2 {
+        font-size: var(--text-xl);
+        font-weight: bold;
+        margin: .61rem 0;
+    }
+
+    h3 {
+        font-size: var(--text-lg);
+        font-weight: bold;
+        margin: .61rem 0;
+    }
+
+    h4 {
+        font-size: var(--text-base);
+        font-weight: bold;
+        margin: .61rem 0;
+    }
+
+    h5 {
+        font-size: var(--text-sm);
+        font-weight: bold;
+        margin: .61rem 0;
+    }
+
+    h6 {
+        font-size: var(--text-xs);
+        font-weight: bold;
+        margin: .61rem 0;
+    }
+
+    p {
+        font-size: var(--text-base);
+        margin: .61rem 0;
+    }
 }

@@ -1,6 +1,10 @@
-/* This file ensures Tailwind generates all color classes we need */
+This file ensures Tailwind generates all color classes we need
 
 /* Color classes for text */
+.text-primary-600 {
+}
+.text-primary-400 {
+}
 .text-emerald-600 {
 }
 .text-amber-600 {
