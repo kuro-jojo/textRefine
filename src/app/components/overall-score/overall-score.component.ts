@@ -11,11 +11,11 @@ import { getScoreInPercentage, getScoreText } from '../../utils';
 export class OverallScoreComponent {
     @Input() score: number | null = null;
     @Input() sophisticationLevel: string | null = null;
+    @Input() sophisticationColor: string | null = null;
     @Input() wordCount: number | null = null;
-    @Input() uniqueCount: number | null = null;
+    @Input() rareWordCount: number | null = null;
 
     getScoreInPercentage = getScoreInPercentage;
-
     getScoreText = getScoreText;
 
     Math = Math;
