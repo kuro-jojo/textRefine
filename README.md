@@ -1,4 +1,4 @@
-# TextRefine Frontend
+# TextRefine
 
 A modern Angular frontend application that provides a user-friendly interface for text analysis tools.
 
@@ -53,7 +53,7 @@ The application will be available at `http://localhost:4200`
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgments
 
