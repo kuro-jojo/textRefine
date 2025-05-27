@@ -1,22 +1,33 @@
 <div class="bg-white rounded-xl shadow-xl p-6">
-  <div class="flex justify-between items-start mb-2">
-    <div>
-      <h3 class="font-medium text-gray-800">{{title}}</h3>
-      <p class="text-xs text-gray-500">{{subtitle}}</p>
+    <div class="flex justify-between items-start mb-2">
+        <div>
+            <h3 class="font-medium text-gray-800">
+                {{ title }}
+                <app-tooltip [tooltipText]="info" [leftPosition]="0" />
+            </h3>
+
+            <p class="text-xs text-gray-500">{{ subtitle }}</p>
+        </div>
+        <div
+            class="w-8 h-8 rounded-full {{
+                getScoreColor(score).all
+            }} flex items-center justify-center"
+        >
+            <i class="fas fa-{{ icon }} {{ getScoreColor(score).text }}"></i>
+        </div>
     </div>
-    <div class="w-8 h-8 rounded-full {{getScoreColor(score).all}} flex items-center justify-center">
-      <i class="fas fa-{{icon}} {{getScoreColor(score).text}}"></i>
+    <div class="flex items-end justify-between">
+        <div class="text-2xl font-bold text-gray-800">
+            {{ getScoreInPercentage(score) }}
+        </div>
+        <div class="text-sm font-medium {{ getScoreColor(score).text }}">
+            {{ score && level ? level : score ? getScoreText(score) : "N/A" }}
+        </div>
     </div>
-  </div>
-  <div class="flex items-end justify-between">
-    <div class="text-2xl font-bold text-gray-800">
-      {{getScoreInPercentage(score)}}
+    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+        <div
+            class="{{ getScoreColor(score).bg }} h-1.5 rounded-full"
+            [style.width]="getScoreWidth(score)"
+        ></div>
     </div>
-    <div class="text-sm font-medium {{getScoreColor(score).text}}">
-      {{score && level ? level : score ? getScoreText(score) : "N/A"}}
-    </div>
-  </div>
-  <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
-    <div class="{{getScoreColor(score).bg}} h-1.5 rounded-full" [style.width]="getScoreWidth(score)"></div>
-  </div>
 </div>
