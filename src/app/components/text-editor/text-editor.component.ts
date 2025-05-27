@@ -57,6 +57,7 @@ export class TextEditorComponent implements OnInit {
     ];
 
     private timeouts: { [key: string]: ReturnType<typeof setTimeout> } = {};
+    private evaluationStartTime: number = 0;
 
     private clearAllTimeouts(): void {
         Object.values(this.timeouts).forEach(timeout => clearTimeout(timeout));
@@ -139,10 +140,12 @@ export class TextEditorComponent implements OnInit {
             return;
         }
         this.error = '';
+        this.info = '';
 
         this.isEvaluating = true;
         this.progress = 0;
         this.currentStep = '🔍 Initializing evaluation...';
+        this.evaluationStartTime = Date.now();
 
         // Start tracking progress based on elapsed time
         const progressInterval = this.setProgession();
@@ -150,8 +153,6 @@ export class TextEditorComponent implements OnInit {
         this.evaluationService.evaluateText(editorContent).subscribe(
             {
                 next: (response: EvaluationGlobalScore) => {
-                    console.log(response);
-
                     // Add cleanup timeout
                     this.addTimeout('cleanup', () => {
                         this.currentStep = '🎉 Evaluation complete!';
@@ -173,21 +174,28 @@ export class TextEditorComponent implements OnInit {
                         : error.error.detail;
 
                     console.error(errorMessage);
-                    this.error = errorMessage;
-
                     // Add error cleanup timeout
                     this.addTimeout('errorCleanup', () => {
                         clearInterval(progressInterval);
                         this.currentStep = '❌ Evaluation failed. Please try again in a few seconds.';
                         this.progress = 0;
                     }, 2000);
-
+                    
                     this.addTimeout('errorStep', () => {
+                        this.error = errorMessage;
+                        this.info = '';
                         this.isEvaluating = false;
-                    }, 5000);
+                    }, 3000);
                 }
             }
         );
+
+        // Add a timeout to check if evaluation is taking too long
+        this.addTimeout('longEvaluation', () => {
+            if (this.progress < 100 && this.isEvaluating) {
+                this.currentStep = '⏳ Taking longer than expected... Please wait.';
+            }
+        }, 5000); // Check after 5 seconds
     }
 
     private setProgession() {

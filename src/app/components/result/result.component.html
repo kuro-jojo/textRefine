@@ -9,7 +9,9 @@
                     evaluationResult.vocabulary.sophistication.level
                 "
                 [sophisticationColor]="
-                    getScoreColor(evaluationResult.vocabulary.sophistication.score).all
+                    getScoreColor(
+                        evaluationResult.vocabulary.sophistication.score
+                    ).all
                 "
                 [wordCount]="evaluationResult.vocabulary.precision.word_count"
                 [rareWordCount]="
@@ -32,6 +34,9 @@
                 subtitle="Grammar & Spelling"
                 [score]="evaluationResult?.correctness?.score ?? null"
                 icon="check"
+                [info]="
+                    'Correctness measures the accuracy of your writing. Higher values indicate more accurate grammar and spelling.'
+                "
             ></app-score-card>
 
             <!-- Sophistication -->
@@ -45,6 +50,9 @@
                     evaluationResult?.vocabulary?.sophistication?.level ?? null
                 "
                 icon="graduation-cap"
+                [info]="
+                    'Sophistication measures the complexity of your writing. Higher values indicate more sophisticated language.'
+                "
             ></app-score-card>
 
             <!-- Precision -->
@@ -53,6 +61,9 @@
                 subtitle="Clarity & Conciseness"
                 [score]="evaluationResult?.vocabulary?.precision?.score ?? null"
                 icon="bullseye"
+                [info]="
+                    'Precision measures the clarity and conciseness of your writing. Higher values indicate more precise and concise writing.'
+                "
             ></app-score-card>
 
             <!-- Vocabulary Diversity -->
@@ -63,14 +74,20 @@
                     evaluationResult?.vocabulary?.lexical_diversity?.ttr ?? null
                 "
                 icon="book"
+                [info]="
+                    'Lexical diversity measures how many unique words are used in your text. Higher values indicate a richer, less repetitive vocabulary.'
+                "
             ></app-score-card>
 
             <!-- Readability -->
             <app-score-card
-                title="Readability (coming soon)"
+                title="Readability (soon)"
                 subtitle="Ease of Reading"
                 [score]="null"
                 icon="book"
+                [info]="
+                    'Readability measures how easy it is to understand your writing. Higher values indicate more readable text.'
+                "
             ></app-score-card>
         </div>
 
@@ -118,7 +135,7 @@
                 <!-- Precision Panel -->
                 <div
                     id="breakdown-panel-precision"
-                    class="accordion-content p-0 show"
+                    class="accordion-content p-0"
                     *ngIf="selectedTab === 'precision'"
                 >
                     <app-precision-panel
@@ -128,7 +145,7 @@
                 </div>
                 <div
                     id="breakdown-panel-sophistication"
-                    class="accordion-content p-6 show"
+                    class="accordion-content p-6"
                     *ngIf="selectedTab === 'sophistication'"
                 >
                     <!-- Sophistication Panel -->
@@ -136,6 +153,17 @@
                         [sophisticationResult]="sophisticationResult"
                         [text]="editorContent"
                     ></app-sophistication-panel>
+                </div>
+                <div
+                    id="breakdown-panel-lexical-diversity"
+                    class="accordion-content p-6 mx-auto"
+                    *ngIf="selectedTab === 'lexical_diversity'"
+                >
+                    <!-- Lexical Diversity Panel -->
+                    <app-lexical-diversity-panel
+                        [lexicalDiversityResult]="lexicalDiversityResult"
+                        [text]="editorContent"
+                    ></app-lexical-diversity-panel>
                 </div>
             </div>
         </div>
@@ -149,11 +177,16 @@
                 [innerHTML]="highlightedText"
             ></div>
             <div class="mt-4 flex flex-wrap gap-4">
-                <div class="flex items-center" *ngFor="let category of categories">
-                    <span class="w-3 h-3 {{ categoryColors[category] }} rounded mr-2"></span>
-                    <span class="text-sm text-gray-600"
-                        >{{ category }}</span
-                    >
+                <div
+                    class="flex items-center"
+                    *ngFor="let category of categories"
+                >
+                    <span
+                        class="w-3 h-3 {{
+                            categoryColors[category]
+                        }} rounded mr-2"
+                    ></span>
+                    <span class="text-sm text-gray-600">{{ category }}</span>
                 </div>
             </div>
         </div>

@@ -13,12 +13,12 @@ import { TooltipComponent } from "../tooltip/tooltip.component";
 })
 export class IssueDetailComponent {
     @Input() issue!: TextIssue;
-    @Input() text!: string ;
+    @Input() text!: string;
 
     private readonly severityClasses = SEVERITY_CLASSES;
 
     private readonly categoryDetail = DETAIL_OF_CATEGORY;
-    
+
     getSeverityClass(issue: TextIssue): string {
         const severity = this.getSeverityOrder(issue) as Severity;
         return this.severityClasses[severity] || 'bg-gray-500 text-gray-900';
@@ -58,31 +58,63 @@ export class IssueDetailComponent {
         const issueWordEnd = issue.start_offset + issue.error_length;
         if (!this.text) return '';
         const issueWord = this.text.substring(issueWordStart, issueWordEnd);
+
         // Get words before the issue
         let start = issueWordStart;
         let wordsBefore = 0;
-        while (start > 0 && wordsBefore < 4) {
-            if (this.text[start] === ' ') wordsBefore++;
+        let encounterTagOrBreak = false;
+
+        // Look backwards for words before the issue
+        while (start > 0 && wordsBefore < 4 && !encounterTagOrBreak) {
+            const char = this.text[start];
+
+            // Stop if we hit a line break or header tag
+            if (char.match(/[\n\r]/) || this.text.substring(start - 6, start).match(/<\/?(h[1-6])>/)) {
+                encounterTagOrBreak = true;
+                break;
+            }
+
+            // Count spaces (words)
+            if (char === ' ') wordsBefore++;
+
             start--;
         }
+
+        while (start > 0 && this.text[start] !== ' ' && !encounterTagOrBreak) {
+            start--;
+        }
+
 
         // Get words after the issue
         let end = issueWordEnd;
         let wordsAfter = 0;
-        while (end < this.text.length && wordsAfter < 5) {
-            if (this.text[end] === ' ') wordsAfter++;
+        encounterTagOrBreak = false;
+
+        // Look forwards for words after the issue
+        while (end < this.text.length && wordsAfter < 5 && !encounterTagOrBreak) {
+            const char = this.text[end];
+
+            // Stop if we hit a line break or header tag
+            if (char.match(/[\n\r]/) || this.text.substring(end, end + 6).match(/<\/?(h[1-6])>/)) {
+                encounterTagOrBreak = true;
+                break;
+            }
+
+            // Count spaces (words)
+            if (char === ' ') wordsAfter++;
+
             end++;
         }
 
-        // Ensure we don't cut off words
-        while (start > 0 && this.text[start] !== ' ') start--;
-        while (end < this.text.length && this.text[end] !== ' ') end++;
+        while (end < this.text.length && this.text[end] !== ' ' && !encounterTagOrBreak) {
+            end++;
+        }
 
-        // If we're at the start of the text, adjust start
+        // Handle edge cases
         if (start < 0) start = 0;
-        // If we're at the end of the text, adjust end
         if (end > this.text.length) end = this.text.length;
 
+        // Get the final text snippet
         let issueText = this.text.substring(start, end).trim();
         const color = this.getSeverityClass(issue);
 

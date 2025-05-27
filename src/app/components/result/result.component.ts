@@ -14,6 +14,8 @@ import { getCategoryName } from '../../models/issue';
 import { getScoreColor, DETAIL_OF_CATEGORY } from '../../utils';
 import { SophisticationPanelComponent } from "../sophistication-panel/sophistication-panel.component";
 import { SophisticationResult } from "../../models/evaluation";
+import { LexicalDiversityPanelComponent } from "../lexical-diversity-panel/lexical-diversity-panel.component";
+import { LexicalDiversityResult } from "../../models/evaluation";
 
 interface TextToken {
     text: string;
@@ -21,16 +23,16 @@ interface TextToken {
 }
 
 @Component({
-    selector: 'app-result',
     imports: [
-        CommonModule,
-        FormsModule,
-        ScoreCardComponent,
-        OverallScoreComponent,
-        CorrectnessPanelComponent,
-        PrecisionPanelComponent,
-        SophisticationPanelComponent
-    ],
+    CommonModule,
+    FormsModule,
+    ScoreCardComponent,
+    OverallScoreComponent,
+    CorrectnessPanelComponent,
+    PrecisionPanelComponent,
+    SophisticationPanelComponent,
+    LexicalDiversityPanelComponent
+],
     templateUrl: './result.component.html',
 })
 export class ResultComponent implements OnInit {
@@ -38,6 +40,7 @@ export class ResultComponent implements OnInit {
     precisionResult: PrecisionResult | null = null;
     correctnessResult: CorrectnessResult | null = null;
     sophisticationResult: SophisticationResult | null = null;
+    lexicalDiversityResult: LexicalDiversityResult | null = null;
     editorContent: string = '';
     highlightedText: string = '';
 
@@ -80,12 +83,10 @@ export class ResultComponent implements OnInit {
     ) { }
 
     demoCall() {
-        const text = `<h1>A titledr for the text</h1>
-In todday's rapdidly evolving world, adaptability and continuous learning have become essential skills for success. As technology advances at an unprecedented pace, individuals and organizations must stayed informed and flexible to remain competitive. Embracing innovation fosters creativity and opens new opportunities, allowing us to solve complex problems more effectively. Education and skill development are crucial components in this journey, empowering people unto navigation change change confidently. Moreover, cultivating a growth mindset encourages resilience, enabling us to view challenges as chances to grow rather than obstacles. Collaboration and communication are also vital, as working together often leads to more innovative solutions and shared success. Sustainability has gained importance, urging us to adopt eco-friendly practices that protect our planet for future generations. In addition, mental health awareness are rising, highlighting the need to prioritize well-being amidst busy lifestyles. Ultimately, balancing technological progress with ethical considerations ensures that advancements benefit society as a whole. By fostering a culture of curiosity and openness, we can create the less more inclusives and dynamic environment where everyone has the opportunity to thrive. As I we look ahead, embracing change with a plus plus positive attitude will be key to building a resilient and prosperous future for all.`;
+        const text = `<h1>Alexander the Great</h1> In todday's rapdidly <h2> Text </h2> evolving world, adaptability and continuous learning have become essential skills for success. As technology advances at an unprecedented pace, individuals and organizations must stayed informed and flexible to remain competitive. Embracing innovation fosters creativity and opens new opportunities, allowing us to solve complex problems more effectively. Education and skill development are crucial components in this journey, empowering people unto navigation change change confidently. Moreover, cultivating a growth mindset encourages resilience, enabling us to view challenges as chances to grow rather than obstacles. Collaboration and communication are also vital, as working together often leads to more innovative solutions and shared success. Sustainability has gained importance, urging us to adopt eco-friendly practices that protect our planet for future generations. In addition, mental health awareness are rising, highlighting the need to prioritize well-being amidst busy lifestyles. Ultimately, balancing technological progress with ethical considerations ensures that advancements benefit society as a whole. By fostering a culture of curiosity and openness, we can create the less more inclusives and dynamic environment where everyone has the opportunity to thrive. As I we look ahead, embracing change with a plus plus positive attitude will be key to building a resilient and prosperous future for all.`;
 
         this.evaluationService.evaluateText(text).subscribe({
             next: (result) => {
-                console.log(result);
                 this.evaluationResultService.setEvaluationResult(result);
                 this.evaluationResultService.setEditorContent(text);
             },
@@ -105,6 +106,7 @@ In todday's rapdidly evolving world, adaptability and continuous learning have b
                     this.precisionResult = result.vocabulary.precision;
                     this.correctnessResult = result.correctness;
                     this.sophisticationResult = result.vocabulary.sophistication;
+                    this.lexicalDiversityResult = result.vocabulary.lexical_diversity;
                 } else {
                     this.router.navigate(['/']);
                 }
