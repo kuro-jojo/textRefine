@@ -13,6 +13,6 @@ export class EvaluationService {
   constructor(private http: HttpClient) { }
 
   evaluateText(text: string): Observable<EvaluationGlobalScore> {
-    return this.http.post<EvaluationGlobalScore>(`${this.apiUrl}/evaluate`, { text });
+    return this.http.post<EvaluationGlobalScore>(`${this.apiUrl}/evaluation`, { text });
   }
 }
