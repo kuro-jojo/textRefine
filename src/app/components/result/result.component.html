@@ -5,18 +5,12 @@
         <div *ngIf="evaluationResult">
             <app-overall-score
                 [score]="evaluationResult.score"
-                [sophisticationLevel]="
-                    evaluationResult.vocabulary.sophistication.level
-                "
+                [sophisticationLevel]="sophisticationResult?.level ?? null"
                 [sophisticationColor]="
-                    getScoreColor(
-                        evaluationResult.vocabulary.sophistication.score
-                    ).all
+                    getScoreColor(sophisticationResult?.score).all
                 "
-                [wordCount]="evaluationResult.vocabulary.precision.word_count"
-                [rareWordCount]="
-                    evaluationResult.vocabulary.sophistication.rare_count
-                "
+                [wordCount]="precisionResult?.word_count ?? null"
+                [rareWordCount]="sophisticationResult?.rare_count ?? null"
             ></app-overall-score>
         </div>
         <div *ngIf="error" class="bg-red-50 text-red-600 p-4 rounded-lg mb-4">
@@ -32,62 +26,67 @@
             <app-score-card
                 title="Correctness"
                 subtitle="Grammar & Spelling"
-                [score]="evaluationResult?.correctness?.score ?? null"
+                [score]="correctnessResult?.score ?? null"
                 icon="check"
                 [info]="
                     'Correctness measures the accuracy of your writing. Higher values indicate more accurate grammar and spelling.'
                 "
+                (click)="selectTab('correctness')"
+                class="cursor-pointer"
             ></app-score-card>
 
             <!-- Sophistication -->
             <app-score-card
                 title="Sophistication"
                 subtitle="Language Level"
-                [score]="
-                    evaluationResult?.vocabulary?.sophistication?.score ?? null
-                "
-                [level]="
-                    evaluationResult?.vocabulary?.sophistication?.level ?? null
-                "
+                [score]="sophisticationResult?.score ?? null"
+                [level]="sophisticationResult?.level ?? null"
                 icon="graduation-cap"
                 [info]="
                     'Sophistication measures the complexity of your writing. Higher values indicate more sophisticated language.'
                 "
+                (click)="selectTab('sophistication')"
+                class="cursor-pointer"
             ></app-score-card>
 
             <!-- Precision -->
             <app-score-card
                 title="Precision"
                 subtitle="Clarity & Conciseness"
-                [score]="evaluationResult?.vocabulary?.precision?.score ?? null"
+                [score]="precisionResult?.score ?? null"
                 icon="bullseye"
                 [info]="
                     'Precision measures the clarity and conciseness of your writing. Higher values indicate more precise and concise writing.'
                 "
+                (click)="selectTab('precision')"
+                class="cursor-pointer"
             ></app-score-card>
 
             <!-- Vocabulary Diversity -->
             <app-score-card
                 title="Lexical Diversity"
                 subtitle="Word Diversity"
-                [score]="
-                    evaluationResult?.vocabulary?.lexical_diversity?.ttr ?? null
-                "
+                [score]="lexicalDiversityResult?.ttr ?? null"
                 icon="book"
                 [info]="
                     'Lexical diversity measures how many unique words are used in your text. Higher values indicate a richer, less repetitive vocabulary.'
                 "
+                (click)="selectTab('lexical_diversity')"
+                class="cursor-pointer"
             ></app-score-card>
 
             <!-- Readability -->
             <app-score-card
-                title="Readability (soon)"
+                title="Readability"
                 subtitle="Ease of Reading"
-                [score]="null"
+                [score]="readabilityResult?.score ?? null"
+                [level]="readabilityResult?.flesch_reading_ease_level ?? null"
                 icon="book"
                 [info]="
                     'Readability measures how easy it is to understand your writing. Higher values indicate more readable text.'
                 "
+                (click)="selectTab('readability')"
+                class="cursor-pointer"
             ></app-score-card>
         </div>
 
@@ -110,7 +109,7 @@
                         (click)="selectTab(tab.id)"
                         class="py-4 px-6 font-medium {{
                             getSelectedTabColor(tab.id).text
-                        }} hover:text-gray-700"
+                        }} hover:text-gray-700 cursor-pointer"
                         [class.hover:text-gray-700]="!isTabSelected(tab.id)"
                         [class.border-b-2]="isTabSelected(tab.id)"
                         [class.border-primary-600]="isTabSelected(tab.id)"
@@ -164,6 +163,17 @@
                         [lexicalDiversityResult]="lexicalDiversityResult"
                         [text]="editorContent"
                     ></app-lexical-diversity-panel>
+                </div>
+                <div
+                    id="breakdown-panel-readability"
+                    class="accordion-content p-6 mx-auto"
+                    *ngIf="selectedTab === 'readability'"
+                >
+                    <!-- Readability Panel -->
+                    <app-readability-panel
+                        [readabilityResult]="readabilityResult"
+                        [text]="editorContent"
+                    ></app-readability-panel>
                 </div>
             </div>
         </div>

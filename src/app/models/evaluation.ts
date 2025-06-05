@@ -7,6 +7,7 @@ export interface EvaluationGlobalScore {
     vocabulary: VocabularyResult;
     correctness: CorrectnessResult;
     precision: PrecisionResult;
+    readability: ReadabilityResult;
 }
 
 // Vocabulary Result
@@ -91,4 +92,32 @@ export interface CorrectnessScoreBreakdown {
     category: ErrorCategory;
     count: number;
     penalty: number;
+}
+
+/**
+ * Represents the result of a readability analysis.
+ */
+export interface ReadabilityResult {
+    // Core metrics with professional interpretation
+    flesch_reading_ease: number;  // 0-100
+    flesch_kincaid_grade: number;  // 0-20
+    smog_index: number;  // 0-20
+    gunning_fog: number;  // 0-20
+    automated_readability_index: number;  // 0-20
+    coleman_liau_index: number;  // 0-20
+    dale_chall_score: number;  // 0-10
+
+    // Composite score (0-1 where higher is better)
+    score: number;  // 0-1
+
+    // Issues and suggestions
+    issues: string[];
+    suggestions: string[];
+
+    // Computed properties
+    overall_grade_level: string;
+    target_audience: string;
+    flesch_reading_ease_level: string;
+
+    estimated_reading_time: number; // in seconds
 }
