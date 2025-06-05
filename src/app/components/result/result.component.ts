@@ -1,21 +1,28 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ScoreCardComponent } from '../score-card/score-card.component';
-import { OverallScoreComponent } from '../overall-score/overall-score.component';
-import { CorrectnessPanelComponent } from '../correctness-panel/correctness-panel.component';
-import { PrecisionPanelComponent } from '../precision-panel/precision-panel.component';
-import { CorrectnessResult, EvaluationGlobalScore, PrecisionResult, WordFrequencyGroup } from '../../models/evaluation';
-import { Category, ErrorCategory } from '../../models/issue';
-import { EvaluationResultService } from '../../services/evaluation-result.service';
 import { Router } from '@angular/router';
+
+import { CorrectnessPanelComponent } from '../correctness-panel/correctness-panel.component';
+import { CorrectnessResult } from '../../models/evaluation';
+import {
+    EvaluationGlobalScore,
+    PrecisionResult,
+    SophisticationResult,
+    LexicalDiversityResult,
+    ReadabilityResult,
+    WordFrequencyGroup
+} from '../../models/evaluation';
+import { Category, ErrorCategory, getCategoryName } from '../../models/issue';
+import { EvaluationResultService } from '../../services/evaluation-result.service';
 import { EvaluationService } from '../../services/evaluation.service';
-import { getCategoryName } from '../../models/issue';
 import { getScoreColor, DETAIL_OF_CATEGORY } from '../../utils';
-import { SophisticationPanelComponent } from "../sophistication-panel/sophistication-panel.component";
-import { SophisticationResult } from "../../models/evaluation";
 import { LexicalDiversityPanelComponent } from "../lexical-diversity-panel/lexical-diversity-panel.component";
-import { LexicalDiversityResult } from "../../models/evaluation";
+import { OverallScoreComponent } from '../overall-score/overall-score.component';
+import { PrecisionPanelComponent } from '../precision-panel/precision-panel.component';
+import { ReadabilityPanelComponent } from "../readability-panel/readability-panel.component";
+import { ScoreCardComponent } from '../score-card/score-card.component';
+import { SophisticationPanelComponent } from "../sophistication-panel/sophistication-panel.component";
 
 interface TextToken {
     text: string;
@@ -24,15 +31,16 @@ interface TextToken {
 
 @Component({
     imports: [
-    CommonModule,
-    FormsModule,
-    ScoreCardComponent,
-    OverallScoreComponent,
-    CorrectnessPanelComponent,
-    PrecisionPanelComponent,
-    SophisticationPanelComponent,
-    LexicalDiversityPanelComponent
-],
+        CommonModule,
+        FormsModule,
+        ScoreCardComponent,
+        OverallScoreComponent,
+        CorrectnessPanelComponent,
+        PrecisionPanelComponent,
+        SophisticationPanelComponent,
+        LexicalDiversityPanelComponent,
+        ReadabilityPanelComponent
+    ],
     templateUrl: './result.component.html',
 })
 export class ResultComponent implements OnInit {
@@ -41,6 +49,7 @@ export class ResultComponent implements OnInit {
     correctnessResult: CorrectnessResult | null = null;
     sophisticationResult: SophisticationResult | null = null;
     lexicalDiversityResult: LexicalDiversityResult | null = null;
+    readabilityResult: ReadabilityResult | null = null;
     editorContent: string = '';
     highlightedText: string = '';
 
@@ -71,7 +80,7 @@ export class ResultComponent implements OnInit {
         { id: 'sophistication', icon: 'graduation-cap', title: 'Sophistication' },
         { id: 'precision', icon: 'bullseye', title: 'Precision' },
         { id: 'lexical_diversity', icon: 'book', title: 'Lexical Diversity' },
-        // { id: 'readability', icon: 'glasses', title: 'Readability' }
+        { id: 'readability', icon: 'glasses', title: 'Readability' }
     ];
 
     getScoreColor = getScoreColor;
@@ -84,6 +93,10 @@ export class ResultComponent implements OnInit {
 
     demoCall() {
         const text = `<h1>Alexander the Great</h1> In todday's rapdidly <h2> Text </h2> evolving world, adaptability and continuous learning have become essential skills for success. As technology advances at an unprecedented pace, individuals and organizations must stayed informed and flexible to remain competitive. Embracing innovation fosters creativity and opens new opportunities, allowing us to solve complex problems more effectively. Education and skill development are crucial components in this journey, empowering people unto navigation change change confidently. Moreover, cultivating a growth mindset encourages resilience, enabling us to view challenges as chances to grow rather than obstacles. Collaboration and communication are also vital, as working together often leads to more innovative solutions and shared success. Sustainability has gained importance, urging us to adopt eco-friendly practices that protect our planet for future generations. In addition, mental health awareness are rising, highlighting the need to prioritize well-being amidst busy lifestyles. Ultimately, balancing technological progress with ethical considerations ensures that advancements benefit society as a whole. By fostering a culture of curiosity and openness, we can create the less more inclusives and dynamic environment where everyone has the opportunity to thrive. As I we look ahead, embracing change with a plus plus positive attitude will be key to building a resilient and prosperous future for all.`;
+
+        const text2 = `Hello there. How are you? I am fine, thank you. How about you? 
+        I am good, thank you. How about you?  Fine, thank you.  The old man said, "I am fine, thank you."
+        `;
 
         this.evaluationService.evaluateText(text).subscribe({
             next: (result) => {
@@ -99,7 +112,7 @@ export class ResultComponent implements OnInit {
     ngOnInit() {
         // this.demoCall();
         this.evaluationResultService.getEvaluationResult().subscribe({
-            next: (result) => {
+            next: (result: EvaluationGlobalScore | null) => {
                 if (result) {
                     this.evaluationResult = result;
                     this.filterTabsIfNoIssues();
@@ -107,6 +120,7 @@ export class ResultComponent implements OnInit {
                     this.correctnessResult = result.correctness;
                     this.sophisticationResult = result.vocabulary.sophistication;
                     this.lexicalDiversityResult = result.vocabulary.lexical_diversity;
+                    this.readabilityResult = result.readability;
                 } else {
                     this.router.navigate(['/']);
                 }
@@ -136,6 +150,7 @@ export class ResultComponent implements OnInit {
     }
 
     selectTab(tabId: string) {
+        if (!this.tabs.find(tab => tab.id === tabId)) return;
         this.selectedTab = tabId;
     }
 
@@ -167,6 +182,8 @@ export class ResultComponent implements OnInit {
                 return this.getScoreColor(this.evaluationResult.vocabulary.sophistication.score);
             case 'lexical_diversity':
                 return this.getScoreColor(this.evaluationResult.vocabulary.lexical_diversity.ttr);
+            case 'readability':
+                return this.getScoreColor(this.evaluationResult.readability.score);
             default:
                 return this.getScoreColor(null);
         }
