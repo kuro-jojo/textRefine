@@ -15,19 +15,30 @@ export class OverallScoreComponent {
     @Input() wordCount: number | null = null;
     @Input() rareWordCount: number | null = null;
     @Input() feedback: string | null = null;
-
+    _score: number = 0;
     getScoreInPercentage = getScoreInPercentage;
     getScoreText = getScoreText;
 
     Math = Math;
 
+    ngOnInit(): void {
+        if (!this.score) return;
+        const interval = setInterval(() => {
+            this._score += .1;
+            if (this._score >= this.score!) {
+                this._score = this.score!;
+                clearInterval(interval);
+            }
+        }, 15);
+    }
+
     getOverallScoreSvgPercentage(radius: number): [string, string] {
         const circumference = 2 * Math.PI * radius;
-        if (!this.score) {
+        if (!this._score) {
             return [`${circumference}px`, `${Math.round(circumference)}px`];
         }
 
-        const dashOffset = Math.round(circumference * (1 - this.score));
+        const dashOffset = Math.round(circumference * (1 - this._score));
 
         return [`${circumference}px`, `${dashOffset}px`];
     }

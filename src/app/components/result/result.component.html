@@ -21,8 +21,19 @@
         <!-- Score Cards -->
         <div
             id="score-cards"
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 mx-auto lg:mx-0 gap-4 mb-6"
         >
+            <app-score-card
+                title="Coherence"
+                subtitle="Flow & Structure"
+                [score]="coherenceResult?.score ?? null"
+                icon="compass"
+                [info]="
+                    'Coherence measures the overall flow and structure of your writing. Higher values indicate a more cohesive and well-organized text.'
+                "
+                (click)="selectTab('coherence')"
+                class="cursor-pointer"
+            ></app-score-card>
             <!-- Correctness -->
             <app-score-card
                 title="Correctness"
@@ -98,8 +109,7 @@
         >
             <p>No issues found</p>
         </div>
-        <div
-            id="detailed-breakdown"
+        <div #breakdownContent
             class="bg-white rounded-xl shadow-xl mb-6"
             *ngIf="tabs.length > 0"
         >
@@ -107,7 +117,7 @@
                 <nav class="flex -mb-px overflow-x-auto">
                     <button
                         *ngFor="let tab of tabs"
-                        (click)="selectTab(tab.id)"
+                        (click)="selectTab(tab.id, false)"
                         class="py-4 px-6 font-medium {{
                             getSelectedTabColor(tab.id).text
                         }} hover:text-gray-700 cursor-pointer"
@@ -120,7 +130,15 @@
                     </button>
                 </nav>
             </div>
-            <div id="breakdown-content">
+            <div>
+                <!-- Coherence Panel -->
+                <div
+                    id="breakdown-panel-coherence"
+                    class="accordion-content"
+                    *ngIf="selectedTab === 'coherence'"
+                >
+                    <app-coherence-panel [coherenceResult]="coherenceResult" />
+                </div>
                 <!-- Correctness Panel -->
                 <div
                     id="breakdown-panel-correctness"
@@ -130,7 +148,7 @@
                     <app-correctness-panel
                         [correctnessResult]="correctnessResult"
                         [text]="editorContent"
-                    ></app-correctness-panel>
+                    />
                 </div>
                 <!-- Precision Panel -->
                 <div
@@ -141,7 +159,7 @@
                     <app-precision-panel
                         [precisionResult]="precisionResult"
                         [text]="editorContent"
-                    ></app-precision-panel>
+                    />
                 </div>
                 <div
                     id="breakdown-panel-sophistication"
@@ -152,7 +170,7 @@
                     <app-sophistication-panel
                         [sophisticationResult]="sophisticationResult"
                         [text]="editorContent"
-                    ></app-sophistication-panel>
+                    />
                 </div>
                 <div
                     id="breakdown-panel-lexical-diversity"
@@ -163,7 +181,7 @@
                     <app-lexical-diversity-panel
                         [lexicalDiversityResult]="lexicalDiversityResult"
                         [text]="editorContent"
-                    ></app-lexical-diversity-panel>
+                    />
                 </div>
                 <div
                     id="breakdown-panel-readability"
@@ -174,7 +192,7 @@
                     <app-readability-panel
                         [readabilityResult]="readabilityResult"
                         [text]="editorContent"
-                    ></app-readability-panel>
+                    />
                 </div>
             </div>
         </div>

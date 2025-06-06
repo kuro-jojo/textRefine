@@ -1,12 +1,9 @@
-<div class="bg-white rounded-xl shadow-xl p-4">
+<div class="bg-white rounded-xl shadow-xl p-4 w-64 md:w-80 lg:w-full h-48">
     <div class="flex justify-between items-start mb-2">
         <div>
             <h3 class="font-medium text-gray-800">
                 {{ title }}
-                <app-tooltip
-                    [tooltipText]="info"
-                    [translate]="'24'"
-                />
+                <app-tooltip [tooltipText]="info" />
             </h3>
 
             <p class="text-xs text-gray-500">{{ subtitle }}</p>

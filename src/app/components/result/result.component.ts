@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -23,6 +23,7 @@ import { PrecisionPanelComponent } from '../precision-panel/precision-panel.comp
 import { ReadabilityPanelComponent } from "../readability-panel/readability-panel.component";
 import { ScoreCardComponent } from '../score-card/score-card.component';
 import { SophisticationPanelComponent } from "../sophistication-panel/sophistication-panel.component";
+import { CoherencePanelComponent } from "../coherence-panel/coherence-panel.component";
 
 interface TextToken {
     text: string;
@@ -39,7 +40,8 @@ interface TextToken {
         PrecisionPanelComponent,
         SophisticationPanelComponent,
         LexicalDiversityPanelComponent,
-        ReadabilityPanelComponent
+        ReadabilityPanelComponent,
+        CoherencePanelComponent
     ],
     templateUrl: './result.component.html',
 })
@@ -50,7 +52,7 @@ export class ResultComponent implements OnInit {
     sophisticationResult: SophisticationResult | null = null;
     lexicalDiversityResult: LexicalDiversityResult | null = null;
     readabilityResult: ReadabilityResult | null = null;
-    coherenceResult: CoherenceResult | null = null; 
+    coherenceResult: CoherenceResult | null = null;
     editorContent: string = '';
     highlightedText: string = '';
 
@@ -72,17 +74,19 @@ export class ResultComponent implements OnInit {
         'Word Usage': `${DETAIL_OF_CATEGORY['Word Usage'].background_color} ${DETAIL_OF_CATEGORY['Word Usage'].text_color}`,
         'Meaning & Logic': `${DETAIL_OF_CATEGORY['Meaning & Logic'].background_color} ${DETAIL_OF_CATEGORY['Meaning & Logic'].text_color}`,
         'Stylistic Issues': `${DETAIL_OF_CATEGORY['Stylistic Issues'].background_color} ${DETAIL_OF_CATEGORY['Stylistic Issues'].text_color}`,
-        'Rare Words': 'bg-teal-200 text-teal-400',
+        'Rare Words': 'bg-teal-100 text-teal-400',
     };
     categories = Object.keys(this.categoryColors);
 
     tabs = [
+        { id: 'coherence', icon: 'compass', title: 'Coherence' },
         { id: 'correctness', icon: 'check', title: 'Correctness' },
         { id: 'sophistication', icon: 'graduation-cap', title: 'Sophistication' },
         { id: 'precision', icon: 'bullseye', title: 'Precision' },
         { id: 'lexical_diversity', icon: 'book', title: 'Lexical Diversity' },
         { id: 'readability', icon: 'glasses', title: 'Readability' }
     ];
+    @ViewChild('breakdownContent') breakdownContent: ElementRef | undefined;
 
     getScoreColor = getScoreColor;
 
@@ -93,7 +97,8 @@ export class ResultComponent implements OnInit {
     ) { }
 
     demoCall() {
-        const text = `<h1>Alexander the Great</h1> In todday's rapdidly <h2> Text </h2> evolving world, adaptability and continuous learning have become essential skills for success. As technology advances at an unprecedented pace, individuals and organizations must stayed informed and flexible to remain competitive. Embracing innovation fosters creativity and opens new opportunities, allowing us to solve complex problems more effectively. Education and skill development are crucial components in this journey, empowering people unto navigation change change confidently. Moreover, cultivating a growth mindset encourages resilience, enabling us to view challenges as chances to grow rather than obstacles. Collaboration and communication are also vital, as working together often leads to more innovative solutions and shared success. Sustainability has gained importance, urging us to adopt eco-friendly practices that protect our planet for future generations. In addition, mental health awareness are rising, highlighting the need to prioritize well-being amidst busy lifestyles. Ultimately, balancing technological progress with ethical considerations ensures that advancements benefit society as a whole. By fostering a culture of curiosity and openness, we can create the less more inclusives and dynamic environment where everyone has the opportunity to thrive. As I we look ahead, embracing change with a plus plus positive attitude will be key to building a resilient and prosperous future for all.`;
+        const text = `<h1>The environment</h1>
+        Environmental conservation is vital for maintaining the health of our planet and ensuring a sustainable future for generations to come. As humanfe activities continue to expand, natural ecosystems face unprecedented threats such as deforestation, pollution, climate change, and loss of biodiversity. Protecting our environment requires collective efforts at individual, community, and governmental levels. Simple actions like reducing waste, recycling, conserving water, and using renewable energy sources can significantly reduce our ecological footprint. Governments and organizations play a crucial role by implementing policies that promote sustainable practices, protect endangered species, and restore degraded habitats. Education also plays a key role in raising awareness about environmental issues, encouraging responsible behavior, and fostering a culture of conservation. Additionally, technological advancements offer innovative solutions to environmental challenges, such as renewable energy technologies, eco-friendly transportation, and waste management systems. Ultimately, preserving the environment is not just an ethical obligation but a practical necessity for ensuring a healthy, balanced world. By taking proactive steps today, we can mitigate the adverse effects of environmental degradation and build a resilient future where humans and nature coexist harmoniously. Our collective responsibility is to act now for a greener, more sustainable planet.`;
 
         const text2 = `Hello there. How are you? I am fine, thank you. How about you? 
         I am good, thank you. How about you?  Fine, thank you.  The old man said, "I am fine, thank you."
@@ -101,7 +106,7 @@ export class ResultComponent implements OnInit {
 
         const request: EvaluationRequest = {
             text: text,
-            topic: 'topic'
+            topic: 'En'
         };
 
         this.evaluationService.evaluateText(request).subscribe({
@@ -116,7 +121,7 @@ export class ResultComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.demoCall();
+        // this.demoCall();
         this.evaluationResultService.getEvaluationResult().subscribe({
             next: (result: EvaluationGlobalScore | null) => {
                 if (result) {
@@ -129,13 +134,13 @@ export class ResultComponent implements OnInit {
                     this.readabilityResult = result.readability;
                     this.coherenceResult = result.coherence;
                 } else {
-                    // this.router.navigate(['/']);
+                    this.router.navigate(['/']);
                 }
             },
             error: (error) => {
                 this.error = error;
                 console.error(error);
-                // this.router.navigate(['/']);
+                this.router.navigate(['/']);
             }
         });
 
@@ -145,20 +150,24 @@ export class ResultComponent implements OnInit {
                     this.editorContent = info;
                     this.highlightedText = this.highlightText(this.editorContent);
                 } else {
-                    // this.router.navigate(['/']);
+                    this.router.navigate(['/']);
                 }
             },
             error: (error) => {
                 this.error = error;
                 console.error(error);
-                // this.router.navigate(['/']);
+                this.router.navigate(['/']);
             }
         });
     }
 
-    selectTab(tabId: string) {
-        if (!this.tabs.find(tab => tab.id === tabId)) return;
+    selectTab(tabId: string, scroll: boolean = true) {
+        if (!this.tabs.find(tab => tab.id === tabId)
+            || this.selectedTab === tabId
+            || !this.breakdownContent?.nativeElement) return;
+
         this.selectedTab = tabId;
+        if (scroll) this.breakdownContent.nativeElement.scrollIntoView({ behavior: 'smooth' });
     }
 
     isTabSelected(tabId: string): boolean {
@@ -181,6 +190,8 @@ export class ResultComponent implements OnInit {
         if (!this.evaluationResult) return this.getScoreColor(null);
         if (!this.isTabSelected(tabId)) return this.getScoreColor(null);
         switch (tabId) {
+            case 'coherence':
+                return this.getScoreColor(this.evaluationResult.coherence.score);
             case 'correctness':
                 return this.getScoreColor(this.evaluationResult.correctness.score);
             case 'precision':

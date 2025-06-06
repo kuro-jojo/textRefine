@@ -63,12 +63,13 @@
                 <div class="flex items-center space-x-2">
                     <app-tooltip
                         tooltipText="Measures the ease with which a reader can understand a text. A score of 12 means a high school senior could understand it."
-                        [translate]="'8'"
-                    ></app-tooltip>
+                        [leftPosition]="0"/>
                     <span class="text-xs text-gray-700"
                         >Flesch Reading Ease</span
                     >
-                    <i class="text-indigo-400 text-xs fa fa-book-open-reader"></i>
+                    <i
+                        class="text-indigo-400 text-xs fa fa-book-open-reader"
+                    ></i>
                 </div>
                 <span class="text-sm font-bold text-indigo-700">{{
                     readabilityResult?.flesch_reading_ease | number : "1.0-0"
@@ -78,7 +79,7 @@
                 <div class="flex items-center space-x-2">
                     <app-tooltip
                         tooltipText="Measures years of education needed to understand the text. A score of 12 means a high school senior could understand it."
-                        [translate]="'8'"
+                        [leftPosition]="0"
                     ></app-tooltip>
                     <span class="text-xs text-gray-700">Smog Index</span>
                     <i class="text-indigo-400 text-xs fa fa-chart-line"></i>
@@ -91,7 +92,7 @@
                 <div class="flex items-center space-x-2">
                     <app-tooltip
                         tooltipText="Measures vocabulary difficulty. A score of 9-10 indicates a 9th-10th grade reading level."
-                        [translate]="'8'"
+                        [leftPosition]="0"
                     ></app-tooltip>
                     <span class="text-xs text-gray-700">Dale-Chall Score</span>
                     <i class="text-indigo-400 text-xs fa fa-graduation-cap"></i>
@@ -104,7 +105,7 @@
                 <div class="flex items-center space-x-2">
                     <app-tooltip
                         tooltipText="Measures text complexity. A score of 12 means a high school senior could understand it."
-                        [translate]="'8'"
+                        [leftPosition]="0"
                     ></app-tooltip>
                     <span class="text-xs text-gray-700">Gunning Fog Index</span>
                     <i class="text-indigo-400 text-xs fa fa-eye"></i>
@@ -137,7 +138,7 @@
         *ngIf="readabilityResult?.suggestions?.length"
     >
         <h4 class="text-sm font-semibold text-indigo-700 mb-3">Suggestions</h4>
-        <ul class="list-disc list-inside">
+        <ul class="list-disc list-inside text-md">
             <li
                 *ngFor="let suggestion of readabilityResult?.suggestions || []"
                 class=""
