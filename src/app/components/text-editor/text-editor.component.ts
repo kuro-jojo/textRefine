@@ -106,6 +106,12 @@ export class TextEditorComponent implements OnInit {
             this.isEvaluating = false;
             return;
         }
+        if (this.form.invalid) {
+            console.error('Form is invalid');
+            this.error = 'Form is invalid. Make sure you have at least 20 words in the text.';
+            this.isEvaluating = false;
+            return;
+        }
         this.error = '';
         this.info = '';
 
@@ -140,11 +146,20 @@ export class TextEditorComponent implements OnInit {
                     }, 3000);
                 },
                 error: (error) => {
-                    const errorMessage = error.status === 0
-                        ? 'Evaluation failed. Cannot connect to server. Please try again.'
-                        : error.error.detail;
+                    let errorMessage;
 
-                    console.error(errorMessage);
+                    if (error.status === 0){
+                        errorMessage = 'Evaluation failed. Cannot connect to server. Please try again.';
+                    }else if (error.error){
+                        if (error.error.detail){
+                            errorMessage = error.error.detail;
+                        }else{
+                            errorMessage = error.error;
+                        }
+                    }else{
+                        errorMessage = 'Evaluation failed. Please try again.';
+                    }
+                    console.error(error, errorMessage);
                     // Add error cleanup timeout
                     this.addTimeout('errorCleanup', () => {
                         clearInterval(progressInterval);
