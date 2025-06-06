@@ -100,10 +100,6 @@ export class ResultComponent implements OnInit {
         const text = `<h1>The environment</h1>
         Environmental conservation is vital for maintaining the health of our planet and ensuring a sustainable future for generations to come. As humanfe activities continue to expand, natural ecosystems face unprecedented threats such as deforestation, pollution, climate change, and loss of biodiversity. Protecting our environment requires collective efforts at individual, community, and governmental levels. Simple actions like reducing waste, recycling, conserving water, and using renewable energy sources can significantly reduce our ecological footprint. Governments and organizations play a crucial role by implementing policies that promote sustainable practices, protect endangered species, and restore degraded habitats. Education also plays a key role in raising awareness about environmental issues, encouraging responsible behavior, and fostering a culture of conservation. Additionally, technological advancements offer innovative solutions to environmental challenges, such as renewable energy technologies, eco-friendly transportation, and waste management systems. Ultimately, preserving the environment is not just an ethical obligation but a practical necessity for ensuring a healthy, balanced world. By taking proactive steps today, we can mitigate the adverse effects of environmental degradation and build a resilient future where humans and nature coexist harmoniously. Our collective responsibility is to act now for a greener, more sustainable planet.`;
 
-        const text2 = `Hello there. How are you? I am fine, thank you. How about you? 
-        I am good, thank you. How about you?  Fine, thank you.  The old man said, "I am fine, thank you."
-        `;
-
         const request: EvaluationRequest = {
             text: text,
             topic: 'En'
