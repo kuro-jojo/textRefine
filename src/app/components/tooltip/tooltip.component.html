@@ -1,9 +1,9 @@
-<span class="ml-2 cursor-pointer group relative">
+<span class="cursor-pointer group relative">
     <i class="text-blue-400 text-xl fa-regular fa-circle-question"></i>
     <span
-        class="absolute -left-{{
-            leftPosition
-        }} -translate-x-1/{{translateFraction}} top-full mt-1 w-64 bg-white border border-gray-200 rounded shadow-lg text-xs text-gray-700 px-2 py-1 opacity-0 group-hover:opacity-100 pointer-events-none z-10 transition whitespace-pre-wrap"
+        class="absolute left-0 transform -translate-x-{{ translate}} md:-translate-x-1/2 top-full mt-1 w-64 bg-white border border-gray-200 rounded shadow-lg 
+        text-xs text-gray-700 px-2 py-1 opacity-0 group-hover:opacity-100 
+        pointer-events-none z-10 transition whitespace-pre-wrap"
     >
         {{ tooltipText }}
     </span>

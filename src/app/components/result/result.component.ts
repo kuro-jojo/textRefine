@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { CorrectnessPanelComponent } from '../correctness-panel/correctness-panel.component';
-import { CorrectnessResult } from '../../models/evaluation';
+import { CoherenceResult, CorrectnessResult, EvaluationRequest } from '../../models/evaluation';
 import {
     EvaluationGlobalScore,
     PrecisionResult,
@@ -50,6 +50,7 @@ export class ResultComponent implements OnInit {
     sophisticationResult: SophisticationResult | null = null;
     lexicalDiversityResult: LexicalDiversityResult | null = null;
     readabilityResult: ReadabilityResult | null = null;
+    coherenceResult: CoherenceResult | null = null; 
     editorContent: string = '';
     highlightedText: string = '';
 
@@ -98,7 +99,12 @@ export class ResultComponent implements OnInit {
         I am good, thank you. How about you?  Fine, thank you.  The old man said, "I am fine, thank you."
         `;
 
-        this.evaluationService.evaluateText(text).subscribe({
+        const request: EvaluationRequest = {
+            text: text,
+            topic: 'topic'
+        };
+
+        this.evaluationService.evaluateText(request).subscribe({
             next: (result) => {
                 this.evaluationResultService.setEvaluationResult(result);
                 this.evaluationResultService.setEditorContent(text);
@@ -110,7 +116,7 @@ export class ResultComponent implements OnInit {
     }
 
     ngOnInit() {
-        // this.demoCall();
+        this.demoCall();
         this.evaluationResultService.getEvaluationResult().subscribe({
             next: (result: EvaluationGlobalScore | null) => {
                 if (result) {
@@ -121,14 +127,15 @@ export class ResultComponent implements OnInit {
                     this.sophisticationResult = result.vocabulary.sophistication;
                     this.lexicalDiversityResult = result.vocabulary.lexical_diversity;
                     this.readabilityResult = result.readability;
+                    this.coherenceResult = result.coherence;
                 } else {
-                    this.router.navigate(['/']);
+                    // this.router.navigate(['/']);
                 }
             },
             error: (error) => {
                 this.error = error;
                 console.error(error);
-                this.router.navigate(['/']);
+                // this.router.navigate(['/']);
             }
         });
 
@@ -138,13 +145,13 @@ export class ResultComponent implements OnInit {
                     this.editorContent = info;
                     this.highlightedText = this.highlightText(this.editorContent);
                 } else {
-                    this.router.navigate(['/']);
+                    // this.router.navigate(['/']);
                 }
             },
             error: (error) => {
                 this.error = error;
                 console.error(error);
-                this.router.navigate(['/']);
+                // this.router.navigate(['/']);
             }
         });
     }

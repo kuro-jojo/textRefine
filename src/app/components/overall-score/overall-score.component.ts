@@ -14,6 +14,7 @@ export class OverallScoreComponent {
     @Input() sophisticationColor: string | null = null;
     @Input() wordCount: number | null = null;
     @Input() rareWordCount: number | null = null;
+    @Input() feedback: string | null = null;
 
     getScoreInPercentage = getScoreInPercentage;
     getScoreText = getScoreText;

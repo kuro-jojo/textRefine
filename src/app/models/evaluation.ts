@@ -1,5 +1,10 @@
 import { ErrorCategory, TextIssue } from "./issue";
 
+export interface EvaluationRequest {
+    text: string;
+    topic?: string;
+}
+
 // Global Score Interface
 export interface EvaluationGlobalScore {
     score: number;
@@ -8,6 +13,7 @@ export interface EvaluationGlobalScore {
     correctness: CorrectnessResult;
     precision: PrecisionResult;
     readability: ReadabilityResult;
+    coherence: CoherenceResult;
 }
 
 // Vocabulary Result
@@ -120,4 +126,14 @@ export interface ReadabilityResult {
     flesch_reading_ease_level: string;
 
     estimated_reading_time: number; // in seconds
+}
+
+// Coherence Result
+export interface CoherenceResult {
+    score: number;
+    text_coherence: number;
+    topic_coherence: number;
+    feedback: string;
+    suggestions: string[];
+    confidence: number;
 }

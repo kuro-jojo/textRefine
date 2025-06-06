@@ -11,6 +11,7 @@
                 "
                 [wordCount]="precisionResult?.word_count ?? null"
                 [rareWordCount]="sophisticationResult?.rare_count ?? null"
+                [feedback]="coherenceResult?.feedback ?? null"
             ></app-overall-score>
         </div>
         <div *ngIf="error" class="bg-red-50 text-red-600 p-4 rounded-lg mb-4">
