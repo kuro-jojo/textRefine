@@ -2,12 +2,13 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Editor, Toolbar, Validators } from 'ngx-editor';
 import { EvaluationService } from '../../services/evaluation.service';
-import { EvaluationGlobalScore } from '../../models/evaluation';
+import { EvaluationGlobalScore, EvaluationRequest } from '../../models/evaluation';
 import { NgxEditorComponent, NgxEditorMenuComponent } from 'ngx-editor';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { WordCounterComponent } from '../word-counter/word-counter.component';
 import { EvaluationResultService } from '../../services/evaluation-result.service';
+import { TooltipComponent } from "../tooltip/tooltip.component";
 
 @Component({
     selector: 'app-text-editor',
@@ -18,7 +19,8 @@ import { EvaluationResultService } from '../../services/evaluation-result.servic
         ReactiveFormsModule,
         WordCounterComponent,
         NgxEditorComponent,
-        NgxEditorMenuComponent
+        NgxEditorMenuComponent,
+        TooltipComponent
     ],
     templateUrl: './text-editor.component.html',
     styleUrls: ['./text-editor.component.css']
@@ -40,7 +42,9 @@ export class TextEditorComponent implements OnInit {
     info: string = '';
 
     form = new FormGroup({
-        editorContent: new FormControl('', [Validators.required(), this.minWordsValidator(this.MIN_WORDS)])
+        editorContent: new FormControl('', [Validators.required(), this.minWordsValidator(this.MIN_WORDS)]),
+        useTopic: new FormControl(false),
+        topic: new FormControl({ value: '', disabled: true })
     });
 
     wordCount: number = 0;
@@ -56,20 +60,6 @@ export class TextEditorComponent implements OnInit {
         '✨ Finalizing results...'
     ];
 
-    private timeouts: { [key: string]: ReturnType<typeof setTimeout> } = {};
-    private evaluationStartTime: number = 0;
-
-    private clearAllTimeouts(): void {
-        Object.values(this.timeouts).forEach(timeout => clearTimeout(timeout));
-        this.timeouts = {};
-    }
-
-    private addTimeout(key: string, callback: () => void, delay: number): void {
-        if (this.timeouts[key]) {
-            clearTimeout(this.timeouts[key]);
-        }
-        this.timeouts[key] = setTimeout(callback, delay);
-    }
 
     constructor(
         private evaluationService: EvaluationService,
@@ -84,9 +74,119 @@ export class TextEditorComponent implements OnInit {
         });
     }
 
+    @HostListener('window:keydown', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): void {
+        if (event.ctrlKey && event.key === 'Enter') {
+            event.preventDefault();
+            if (this.isEvaluating) {
+                this.info = 'Evaluation in progress... Please wait.';
+                return;
+            }
+            this.onSubmit();
+        }
+    }
+
+    onTopicToggle(event: Event): void {
+        const checked = (event.target as HTMLInputElement).checked;
+        const topicControl = this.form.get('topic');
+        if (checked) {
+            topicControl?.enable();
+            topicControl?.setValidators([Validators.required()]);
+        } else {
+            topicControl?.disable();
+            topicControl?.clearValidators();
+        }
+        topicControl?.updateValueAndValidity();
+    }
+
+    onSubmit(): void {
+        if (!this.form.value.editorContent || this.charCount === 0) {
+            console.error('No content provided');
+            this.error = 'No content provided';
+            this.isEvaluating = false;
+            return;
+        }
+        this.error = '';
+        this.info = '';
+
+        this.isEvaluating = true;
+        this.progress = 0;
+        this.currentStep = '🔍 Initializing evaluation...';
+
+        // Start tracking progress based on elapsed time
+        const progressInterval = this.setProgession();
+        const editorContent = this.form.value.editorContent;
+        const request: EvaluationRequest = {
+            text: editorContent,
+            topic: this.form.value.topic || undefined
+        };
+        
+        this.evaluationService.evaluateText(request).subscribe(
+            {
+                next: (response: EvaluationGlobalScore) => {
+                    // Add cleanup timeout
+                    this.addTimeout('cleanup', () => {
+                        this.currentStep = '🎉 Evaluation complete!';
+                        clearInterval(progressInterval);
+                        this.progress = 100;
+                    }, 2000);
+
+                    // Add navigation timeout
+                    this.addTimeout('navigate', () => {
+                        this.isEvaluating = false;
+                        this.evaluationResultService.setEvaluationResult(response);
+                        this.evaluationResultService.setEditorContent(editorContent);
+                        this.router.navigate(['/result']);
+                    }, 3000);
+                },
+                error: (error) => {
+                    const errorMessage = error.status === 0
+                        ? 'Evaluation failed. Cannot connect to server. Please try again.'
+                        : error.error.detail;
+
+                    console.error(errorMessage);
+                    // Add error cleanup timeout
+                    this.addTimeout('errorCleanup', () => {
+                        clearInterval(progressInterval);
+                        this.currentStep = '❌ Evaluation failed. Please try again in a few seconds.';
+                        this.progress = 0;
+                    }, 2000);
+
+                    this.addTimeout('errorStep', () => {
+                        this.error = errorMessage;
+                        this.info = '';
+                        this.isEvaluating = false;
+                    }, 3000);
+                }
+            }
+        );
+
+        // Add a timeout to check if evaluation is taking too long
+        this.addTimeout('longEvaluation', () => {
+            if (this.progress < 100 && this.isEvaluating) {
+                this.currentStep = '⏳ Taking longer than expected... Please wait.';
+            }
+        }, 5000); // Check after 5 seconds
+    }
+
+    private timeouts: { [key: string]: ReturnType<typeof setTimeout> } = {};
+
+    private clearAllTimeouts(): void {
+        Object.values(this.timeouts).forEach(timeout => clearTimeout(timeout));
+        this.timeouts = {};
+    }
+
+    private addTimeout(key: string, callback: () => void, delay: number): void {
+        if (this.timeouts[key]) {
+            clearTimeout(this.timeouts[key]);
+        }
+        this.timeouts[key] = setTimeout(callback, delay);
+    }
+
+
     // Custom validator for minimum words
     private minWordsValidator(minWords: number): ValidatorFn {
-        return (control: AbstractControl) => {
+        return (control: AbstractControl): { [key: string]: any } | null => {
             const value = control.value as string;
             if (!value) {
                 return null;
@@ -120,83 +220,6 @@ export class TextEditorComponent implements OnInit {
         this.charCount = chars.length;
     }
 
-    @HostListener('window:keydown', ['$event'])
-    handleKeyboardEvent(event: KeyboardEvent): void {
-        if (event.ctrlKey && event.key === 'Enter') {
-            event.preventDefault();
-            if (this.isEvaluating) {
-                this.info = 'Evaluation in progress... Please wait.';
-                return;
-            }
-            this.onSubmit();
-        }
-    }
-
-    onSubmit(): void {
-        if (!this.form.value.editorContent || this.charCount === 0) {
-            console.error('No content provided');
-            this.error = 'No content provided';
-            this.isEvaluating = false;
-            return;
-        }
-        this.error = '';
-        this.info = '';
-
-        this.isEvaluating = true;
-        this.progress = 0;
-        this.currentStep = '🔍 Initializing evaluation...';
-        this.evaluationStartTime = Date.now();
-
-        // Start tracking progress based on elapsed time
-        const progressInterval = this.setProgession();
-        const editorContent = this.form.value.editorContent;
-        this.evaluationService.evaluateText(editorContent).subscribe(
-            {
-                next: (response: EvaluationGlobalScore) => {
-                    // Add cleanup timeout
-                    this.addTimeout('cleanup', () => {
-                        this.currentStep = '🎉 Evaluation complete!';
-                        clearInterval(progressInterval);
-                        this.progress = 100;
-                    }, 2000);
-
-                    // Add navigation timeout
-                    this.addTimeout('navigate', () => {
-                        this.isEvaluating = false;
-                        this.evaluationResultService.setEvaluationResult(response);
-                        this.evaluationResultService.setEditorContent(editorContent);
-                        this.router.navigate(['/result']);
-                    }, 3000);
-                },
-                error: (error) => {
-                    const errorMessage = error.status === 0
-                        ? 'Evaluation failed. Cannot connect to server. Please try again.'
-                        : error.error.detail;
-
-                    console.error(errorMessage);
-                    // Add error cleanup timeout
-                    this.addTimeout('errorCleanup', () => {
-                        clearInterval(progressInterval);
-                        this.currentStep = '❌ Evaluation failed. Please try again in a few seconds.';
-                        this.progress = 0;
-                    }, 2000);
-                    
-                    this.addTimeout('errorStep', () => {
-                        this.error = errorMessage;
-                        this.info = '';
-                        this.isEvaluating = false;
-                    }, 3000);
-                }
-            }
-        );
-
-        // Add a timeout to check if evaluation is taking too long
-        this.addTimeout('longEvaluation', () => {
-            if (this.progress < 100 && this.isEvaluating) {
-                this.currentStep = '⏳ Taking longer than expected... Please wait.';
-            }
-        }, 5000); // Check after 5 seconds
-    }
 
     private setProgession() {
         const startTime = Date.now();

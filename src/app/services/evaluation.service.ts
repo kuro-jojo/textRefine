@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { EvaluationGlobalScore } from '../models/evaluation';
+import { EvaluationGlobalScore, EvaluationRequest } from '../models/evaluation';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class EvaluationService {
 
   constructor(private http: HttpClient) { }
 
-  evaluateText(text: string): Observable<EvaluationGlobalScore> {
-    return this.http.post<EvaluationGlobalScore>(`${this.apiUrl}/evaluation`, { text });
+  evaluateText(request: EvaluationRequest): Observable<EvaluationGlobalScore> {
+    return this.http.post<EvaluationGlobalScore>(`${this.apiUrl}/evaluation`, request);
   }
 }

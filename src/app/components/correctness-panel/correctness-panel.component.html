@@ -1,6 +1,5 @@
 <div
     class="p-4 flex flex-col md:flex-row md:items-center gap-3 border-b bg-gray-50"
-    id="breakdown-controls"
 >
     <div class="flex flex-wrap items-center gap-2">
         <span class="text-xs font-semibold text-gray-700 mr-2">Filter:</span>
@@ -53,9 +52,15 @@
         *ngIf="shownIssues.length === 0"
         class="text-gray-500 text-xl text-center my-4"
     >
-        <span *ngIf="filteredIssues.length === 0" class="font-semibold">No issues found</span>
-        <span *ngIf="filteredIssues.length > 0" class="font-semibold">No issues found for selected filters</span>
-        <span *ngIf="filteredIssues.length > 0" class="font-semibold">No more issues</span>
+        <span *ngIf="filteredIssues.length === 0" class="font-semibold"
+            >No issues found</span
+        >
+        <span *ngIf="filteredIssues.length > 0" class="font-semibold"
+            >No issues found for selected filters</span
+        >
+        <span *ngIf="filteredIssues.length > 0" class="font-semibold"
+            >No more issues</span
+        >
     </div>
     <div *ngIf="shownIssues.length > 0" class="grid md:grid-cols-2 gap-4">
         <app-issue-detail
