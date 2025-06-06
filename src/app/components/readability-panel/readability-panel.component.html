@@ -61,13 +61,15 @@
         <div class="space-y-3">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                    <i class="text-indigo-400 text-xs fa fa-chart-line"></i>
+                    <app-tooltip
+                        tooltipText="Measures the ease with which a reader can understand a text. A score of 12 means a high school senior could understand it."
+                        [leftPosition]="0"/>
                     <span class="text-xs text-gray-700"
                         >Flesch Reading Ease</span
                     >
-                    <app-tooltip
-                        tooltipText="Measures the ease with which a reader can understand a text. A score of 12 means a high school senior could understand it."
-                    ></app-tooltip>
+                    <i
+                        class="text-indigo-400 text-xs fa fa-book-open-reader"
+                    ></i>
                 </div>
                 <span class="text-sm font-bold text-indigo-700">{{
                     readabilityResult?.flesch_reading_ease | number : "1.0-0"
@@ -75,11 +77,12 @@
             </div>
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                    <i class="text-indigo-400 text-xs fa fa-chart-line"></i>
-                    <span class="text-xs text-gray-700">Smog Index</span>
                     <app-tooltip
                         tooltipText="Measures years of education needed to understand the text. A score of 12 means a high school senior could understand it."
+                        [leftPosition]="0"
                     ></app-tooltip>
+                    <span class="text-xs text-gray-700">Smog Index</span>
+                    <i class="text-indigo-400 text-xs fa fa-chart-line"></i>
                 </div>
                 <span class="text-sm font-bold text-indigo-700">{{
                     readabilityResult?.smog_index | number : "1.0-0"
@@ -87,11 +90,12 @@
             </div>
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                    <i class="text-indigo-400 text-xs fa fa-graduation-cap"></i>
-                    <span class="text-xs text-gray-700">Dale-Chall Score</span>
                     <app-tooltip
                         tooltipText="Measures vocabulary difficulty. A score of 9-10 indicates a 9th-10th grade reading level."
+                        [leftPosition]="0"
                     ></app-tooltip>
+                    <span class="text-xs text-gray-700">Dale-Chall Score</span>
+                    <i class="text-indigo-400 text-xs fa fa-graduation-cap"></i>
                 </div>
                 <span class="text-sm font-bold text-indigo-700">{{
                     readabilityResult?.dale_chall_score | number : "1.0-0"
@@ -99,11 +103,12 @@
             </div>
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                    <i class="text-indigo-400 text-xs fa fa-eye"></i>
-                    <span class="text-xs text-gray-700">Gunning Fog Index</span>
                     <app-tooltip
                         tooltipText="Measures text complexity. A score of 12 means a high school senior could understand it."
+                        [leftPosition]="0"
                     ></app-tooltip>
+                    <span class="text-xs text-gray-700">Gunning Fog Index</span>
+                    <i class="text-indigo-400 text-xs fa fa-eye"></i>
                 </div>
                 <span class="text-sm font-bold text-indigo-700">{{
                     readabilityResult?.gunning_fog | number : "1.0-0"
@@ -133,7 +138,7 @@
         *ngIf="readabilityResult?.suggestions?.length"
     >
         <h4 class="text-sm font-semibold text-indigo-700 mb-3">Suggestions</h4>
-        <ul class="list-disc list-inside">
+        <ul class="list-disc list-inside text-md">
             <li
                 *ngFor="let suggestion of readabilityResult?.suggestions || []"
                 class=""
