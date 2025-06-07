@@ -21,6 +21,13 @@
                 [placeholder]="'Type here...'"
             ></ngx-editor>
         </div>
+        <div
+            *ngIf="!isEvaluating && form.invalid"
+            class="text-blue-500 text-sm my-2"
+        >
+            <i class="fa-solid fa-circle-exclamation"></i>
+            At least {{ MIN_WORDS }} words are required
+        </div>
         <!-- Topic Input -->
         <div class="mt-4 mb-4">
             <div class="flex items-center mb-2 gap-2">
@@ -64,13 +71,6 @@
 
         <!-- Analyze Button / Progress Bar -->
         <div class="w-full">
-            <div
-                *ngIf="!isEvaluating && form.invalid"
-                class="text-blue-500 text-sm my-2"
-            >
-                <i class="fa-solid fa-circle-exclamation"></i>
-                At least {{ MIN_WORDS }} words are required
-            </div>
             <button
                 *ngIf="!isEvaluating"
                 [disabled]="form.invalid"

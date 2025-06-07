@@ -104,12 +104,18 @@ export class TextEditorComponent implements OnInit {
             console.error('No content provided');
             this.error = 'No content provided';
             this.isEvaluating = false;
+            this.addTimeout('errorTimeout', () => {
+                this.error = '';
+            }, 2000);
             return;
         }
         if (this.form.invalid) {
             console.error('Form is invalid');
             this.error = 'Form is invalid. Make sure you have at least 20 words in the text.';
             this.isEvaluating = false;
+            this.addTimeout('errorTimeout', () => {
+                this.error = '';
+            }, 2000);
             return;
         }
         this.error = '';
@@ -126,7 +132,7 @@ export class TextEditorComponent implements OnInit {
             text: editorContent,
             topic: this.form.value.topic || undefined
         };
-        
+
         this.evaluationService.evaluateText(request).subscribe(
             {
                 next: (response: EvaluationGlobalScore) => {
@@ -148,15 +154,15 @@ export class TextEditorComponent implements OnInit {
                 error: (error) => {
                     let errorMessage;
 
-                    if (error.status === 0){
+                    if (error.status === 0) {
                         errorMessage = 'Evaluation failed. Cannot connect to server. Please try again.';
-                    }else if (error.error){
-                        if (error.error.detail){
+                    } else if (error.error) {
+                        if (error.error.detail) {
                             errorMessage = error.error.detail;
-                        }else{
+                        } else {
                             errorMessage = error.error;
                         }
-                    }else{
+                    } else {
                         errorMessage = 'Evaluation failed. Please try again.';
                     }
                     console.error(error, errorMessage);
