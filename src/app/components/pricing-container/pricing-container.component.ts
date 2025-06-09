@@ -61,7 +61,7 @@ export class PricingContainerComponent {
         {
             id: 'developer-plan',
             name: 'Developer',
-            price: 10,
+            price: 8,
             currency: this.currency,
             billingPeriod: this.billingPeriod,
             description: 'For developers',

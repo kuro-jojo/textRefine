@@ -8,9 +8,13 @@ import { CommonModule } from '@angular/common';
     templateUrl: './testimonial.component.html',
 })
 export class TestimonialComponent {
-    @Input() author: string = '';
-    @Input() position: string = '';
-    @Input() content: string = '';
-    @Input() avatarUrl: string = '';
-    @Input() rating: number = 5;
+    @Input() testimonial: Testimonial = {} as Testimonial;
+}
+
+export interface Testimonial {
+    author: string;
+    position: string;
+    content: string;
+    avatarUrl: string;
+    rating: number;
 }

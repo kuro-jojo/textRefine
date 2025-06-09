@@ -102,7 +102,7 @@ export class ResultComponent implements OnInit {
 
         const request: EvaluationRequest = {
             text: text,
-            topic: 'En'
+            topic: 'Environment'
         };
 
         this.evaluationService.evaluateText(request).subscribe({

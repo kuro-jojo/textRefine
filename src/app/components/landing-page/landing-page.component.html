@@ -364,7 +364,7 @@
                                 </div>
                             </div>
                             <div class="w-full max-h-[300px] text-center">
-                                <img src="images/tracking-chart.png" alt="">
+                                <img src="images/tracking-chart.png" alt="" />
                             </div>
                         </div>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -519,23 +519,29 @@
     <div class="container mx-auto">
         <div class="text-center mb-16">
             <h2 class="font-serif text-4xl font-bold text-gray-900 mb-4">
-                What Our Users Say
+                What our users say
             </h2>
-            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p *ngIf="testimonials.length > 0" class="text-xl text-gray-600 max-w-2xl mx-auto">
                 Join thousands of satisfied writers who improved their work with
                 TextRefine.
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <!-- Testimonial Items -->
+        <!-- Testimonial Items -->
+        <div
+            *ngIf="testimonials.length === 0"
+            class="space-y-4 bg-white text-teal-900 text-xl font-bold p-6 rounded-xl shadow-md w-1/4 text-center mx-auto"
+        >
+            No Testimonials Yet <i class="fa-solid fa-face-frown"></i>
+        </div>
+        <div
+            *ngIf="testimonials.length > 0"
+            class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto"
+        >
             <app-testimonial
                 *ngFor="let testimonial of testimonials"
-                [author]="testimonial.author"
-                [position]="testimonial.position"
-                [content]="testimonial.content"
-                [avatarUrl]="testimonial.avatarUrl"
-                [rating]="testimonial.rating">
+                [testimonial]="testimonial"
+            >
             </app-testimonial>
         </div>
     </div>
