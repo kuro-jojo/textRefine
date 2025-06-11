@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReadabilityResult } from '../../models/evaluation';
-import { getScoreColor, getScoreInPercentage, getScoreText } from '../../utils';
+import { getScoreColor, getScoreInPercentage, getScoreText } from '../../utils/classes-mapping.utils';
 import { TooltipComponent } from "../tooltip/tooltip.component";
+import { splitIntoSentences } from '../../utils/text.utils';
 
 @Component({
     selector: 'app-readability-panel',
@@ -18,6 +19,7 @@ export class ReadabilityPanelComponent {
     getScoreInPercentage = getScoreInPercentage
     getScoreColor = getScoreColor
     getScoreText = getScoreText
+    splitIntoSentences = splitIntoSentences
 
     getEstimatedReadingTime() {
         if (!this.readabilityResult?.estimated_reading_time) return 'N/A';

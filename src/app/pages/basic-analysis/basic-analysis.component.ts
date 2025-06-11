@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { TextEditorComponent } from '../text-editor/text-editor.component';
+import { TextEditorComponent } from '../../components/text-editor/text-editor.component';
 
 @Component({
     selector: 'app-home',
     standalone: true,
     imports: [TextEditorComponent],
-    templateUrl: './home.component.html',
-    styleUrls: ['./home.component.css']
+    templateUrl: './basic-analysis.component.html',
 })
-export class HomeComponent implements OnInit {
+export class BasicAnalysisComponent implements OnInit {
     wordCount = 0;
     charCount = 0;
     editorContent = 'Start typing or paste your text here for analysis...';

@@ -27,6 +27,16 @@ import { TooltipComponent } from "../tooltip/tooltip.component";
 })
 export class TextEditorComponent implements OnInit {
     MIN_WORDS = 20;
+
+    audienceOptions: AudienceOption[] = [
+        { value: 'children', label: 'Children' },
+        { value: 'teenagers', label: 'Teenagers' },
+        { value: 'young_adults', label: 'Young Adults' },
+        { value: 'general', label: 'General Audience' },
+        { value: 'business', label: 'Business/Corporate' },
+        { value: 'professional', label: 'Professional/Technical' },
+        { value: 'academic', label: 'Academic/Researcher' },
+    ];
     editor: Editor = new Editor({
         history: true
     });
@@ -38,13 +48,16 @@ export class TextEditorComponent implements OnInit {
         ['horizontal_rule', 'format_clear'],
         ['undo', 'redo'],
     ];
-    error: string = '';
+    errors: { [key: string]: string } = {};
     info: string = '';
-
+    errorTimeout: number = 10000;
+    
     form = new FormGroup({
         editorContent: new FormControl('', [Validators.required(), this.minWordsValidator(this.MIN_WORDS)]),
         useTopic: new FormControl(false),
-        topic: new FormControl({ value: '', disabled: true })
+        topic: new FormControl({ value: '', disabled: true }),
+        enableAudience: new FormControl(false),
+        audience: new FormControl({ value: null, disabled: true })
     });
 
     wordCount: number = 0;
@@ -78,10 +91,6 @@ export class TextEditorComponent implements OnInit {
     handleKeyboardEvent(event: KeyboardEvent): void {
         if (event.ctrlKey && event.key === 'Enter') {
             event.preventDefault();
-            if (this.isEvaluating) {
-                this.info = 'Evaluation in progress... Please wait.';
-                return;
-            }
             this.onSubmit();
         }
     }
@@ -99,21 +108,75 @@ export class TextEditorComponent implements OnInit {
         topicControl?.updateValueAndValidity();
     }
 
+    onAudienceToggle(event: Event): void {
+        const checked = (event.target as HTMLInputElement).checked;
+        const audienceControl = this.form.get('audience');
+        if (checked) {
+            audienceControl?.enable();
+            audienceControl?.setValidators([Validators.required()]);
+        } else {
+            audienceControl?.disable();
+            audienceControl?.clearValidators();
+            audienceControl?.setValue(null);
+        }
+        audienceControl?.updateValueAndValidity();
+    }
+
     onSubmit(): void {
-        if (!this.form.value.editorContent || this.charCount === 0) {
-            console.error('No content provided');
-            this.error = 'No content provided';
-            this.isEvaluating = false;
-            return;
-        }
-        if (this.form.invalid) {
-            console.error('Form is invalid');
-            this.error = 'Form is invalid. Make sure you have at least 20 words in the text.';
-            this.isEvaluating = false;
-            return;
-        }
-        this.error = '';
         this.info = '';
+
+        if (this.isEvaluating) {
+            this.info = 'Evaluation is already in progress... Please wait.';
+            return;
+        }
+
+        if (!this.form.value.editorContent || this.charCount === 0) {
+            this.errors = {};
+            console.error('No content provided');
+            this.errors['emptyContent'] = 'No content provided';
+            this.isEvaluating = false;
+            this.addTimeout('errorTimeout', () => {
+                delete this.errors['emptyContent'];
+            }, this.errorTimeout); // 10 seconds
+            return;
+        } else {
+            delete this.errors['emptyContent'];
+        }
+
+        if (this.form.invalid) {
+            if (this.form.get('topic')!.invalid) {
+                if (this.errors['topic'] === '' || this.errors['topic'] === undefined) {
+                    this.errors['topic'] = 'The topic option is enabled but no topic is selected';
+                    this.addTimeout('topicErrorTimeout', () => {
+                        delete this.errors['topic'];
+                    }, this.errorTimeout);
+                }
+            } else {
+                delete this.errors['topic'];
+            }
+            if (this.form.get('audience')!.invalid) {
+                if (this.errors['audience'] === '' || this.errors['audience'] === undefined) {
+                    this.errors['audience'] = 'The audience option is enabled but no audience is selected';
+                    this.addTimeout('audienceErrorTimeout', () => {
+                        delete this.errors['audience'];
+                    }, this.errorTimeout);
+                }
+            } else {
+                delete this.errors['audience'];
+            }
+            if (this.form.get('editorContent')!.invalid) {
+                if (this.errors['editorContent'] === '' || this.errors['editorContent'] === undefined) {
+                    this.errors['editorContent'] = 'Make sure you have at least 20 words in the text.';
+                    this.addTimeout('editorContentErrorTimeout', () => {
+                        delete this.errors['editorContent'];
+                    }, this.errorTimeout);
+                }
+            } else {
+                delete this.errors['editorContent'];
+            }
+            this.isEvaluating = false;
+            return;
+        }
 
         this.isEvaluating = true;
         this.progress = 0;
@@ -124,9 +187,10 @@ export class TextEditorComponent implements OnInit {
         const editorContent = this.form.value.editorContent;
         const request: EvaluationRequest = {
             text: editorContent,
-            topic: this.form.value.topic || undefined
+            topic: this.form.value.topic || undefined,
+            audience: this.form.value.enableAudience ? (this.form.value.audience || undefined) : undefined
         };
-        
+
         this.evaluationService.evaluateText(request).subscribe(
             {
                 next: (response: EvaluationGlobalScore) => {
@@ -148,15 +212,15 @@ export class TextEditorComponent implements OnInit {
                 error: (error) => {
                     let errorMessage;
 
-                    if (error.status === 0){
+                    if (error.status === 0) {
                         errorMessage = 'Evaluation failed. Cannot connect to server. Please try again.';
-                    }else if (error.error){
-                        if (error.error.detail){
+                    } else if (error.error) {
+                        if (error.error.detail) {
                             errorMessage = error.error.detail;
-                        }else{
+                        } else {
                             errorMessage = error.error;
                         }
-                    }else{
+                    } else {
                         errorMessage = 'Evaluation failed. Please try again.';
                     }
                     console.error(error, errorMessage);
@@ -168,7 +232,7 @@ export class TextEditorComponent implements OnInit {
                     }, 2000);
 
                     this.addTimeout('errorStep', () => {
-                        this.error = errorMessage;
+                        this.errors['errorStep'] = errorMessage;
                         this.info = '';
                         this.isEvaluating = false;
                     }, 3000);
@@ -261,4 +325,10 @@ export class TextEditorComponent implements OnInit {
         this.editor.destroy();
         this.clearAllTimeouts();
     }
+}
+
+
+interface AudienceOption {
+    value: string;
+    label: string;
 }

@@ -1,4 +1,4 @@
-import { Category, CategoryDetail } from "./models/issue";
+import { Category, CategoryDetail } from "../models/issue";
 
 export const SCORE_COLORS = {
     'gray': {

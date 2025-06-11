@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { getScoreColor, getScoreInPercentage, getScoreText } from '../../utils';
+import { getScoreColor, getScoreInPercentage, getScoreText } from '../../utils/classes-mapping.utils';
 import { TooltipComponent } from "../tooltip/tooltip.component";
 
 @Component({

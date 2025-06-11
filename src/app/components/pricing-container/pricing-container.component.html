@@ -1,0 +1,40 @@
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+    @for (plan of plans; track plan.id) {
+    <div [class]="getPlanClasses(plan)">
+        <div class="p-6">
+            <!-- Popular Badge -->
+            @if (highlightPopular && plan.isPopular) {
+            <div class="absolute top-0 right-0 bg-teal-600 text-white text-xs px-3 py-1 font-medium">
+                POPULAR
+            </div>
+            }
+            
+            <!-- Plan Name -->
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ plan.name }}</h3>
+            <p class="text-gray-600 mb-6">{{ plan.description }}</p>
+            
+            <!-- Price -->
+            <div class="text-5xl font-bold text-gray-900 mb-6">
+                <span>{{ plan.currency }}</span>
+                {{ plan.price }}
+                <span class="text-xl font-normal text-gray-500">/{{ plan.billingPeriod }}</span>
+            </div>
+
+            <!-- Features List -->
+            <ul class="space-y-3 mb-8">
+                @for (feature of plan.features; track $index) {
+                <li class="flex items-center text-gray-700">
+                    <i class="text-green-500 mr-3 fa fa-check"></i>
+                    <span>{{ feature }}</span>
+                </li>
+                }
+            </ul>
+
+            <!-- Call to Action -->
+            <button [class]="getCtaClasses(plan)">
+                {{ plan.ctaText }}
+            </button>
+        </div>
+    </div>
+    }
+</div>

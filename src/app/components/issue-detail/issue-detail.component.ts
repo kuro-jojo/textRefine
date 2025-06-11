@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TextIssue, ErrorCategory, getCategorySeverityText } from '../../models/issue';
 import { Severity, Category } from '../../models/issue';
-import { SEVERITY_CLASSES, DETAIL_OF_CATEGORY } from '../../utils';
+import { SEVERITY_CLASSES, DETAIL_OF_CATEGORY } from '../../utils/classes-mapping.utils';
 import { TooltipComponent } from "../tooltip/tooltip.component";
 
 @Component({

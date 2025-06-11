@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { LexicalDiversityResult } from '../../models/evaluation';
-import { getScoreColor, getScoreInPercentage, getScoreText } from '../../utils';
+import { getScoreColor, getScoreInPercentage, getScoreText } from '../../utils/classes-mapping.utils';
 import { CommonModule } from '@angular/common';
 import { TooltipComponent } from "../tooltip/tooltip.component";
 
