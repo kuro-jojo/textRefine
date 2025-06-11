@@ -42,9 +42,10 @@
             </nav>
 
             <div class="flex items-center space-x-4">
-                <span
+                <a
+                    routerLink="/sign-in"
                     class="text-teal-700 font-medium hidden md:block cursor-pointer"
-                    >Sign In</span
+                    >Sign In</a
                 >
                 <a
                     routerLink="/try"
@@ -93,7 +94,7 @@
                 >
                 <div class="border-t border-gray-200 my-2"></div>
                 <a
-                    href="#"
+                    routerLink="/sign-in"
                     (click)="closeMenu()"
                     class="block px-3 py-2 text-teal-700 font-medium"
                     >Sign In</a
