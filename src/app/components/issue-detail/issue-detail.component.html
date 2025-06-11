@@ -30,7 +30,8 @@
             </span>
             <app-tooltip
                 tooltipText="{{ getCategoryDescription(issue.category) }}"
-            ></app-tooltip>
+                [translate]="'2/2'"
+            />
         </div>
         <div class="mb-2 text-gray-800" [innerHTML]="getIssueText(issue)"></div>
         <div class="mb-1 text-sm text-gray-700">

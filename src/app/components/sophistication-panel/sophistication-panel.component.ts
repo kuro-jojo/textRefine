@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { SophisticationResult, SophisticationLevel } from "../../models/evaluation";
-import { getScoreColor, getScoreInPercentage, getScoreText } from "../../utils";
+import { getScoreColor, getScoreInPercentage, getScoreText } from "../../utils/classes-mapping.utils";
 import { TooltipComponent } from "../tooltip/tooltip.component";
 
 @Component({

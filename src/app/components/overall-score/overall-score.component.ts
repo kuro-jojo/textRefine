@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { getScoreInPercentage, getScoreText } from '../../utils';
+import { getScoreInPercentage, getScoreText } from '../../utils/classes-mapping.utils';
+import { splitIntoSentences } from '../../utils/text.utils';
 
 @Component({
     selector: 'app-overall-score',
@@ -41,5 +42,9 @@ export class OverallScoreComponent {
         const dashOffset = Math.round(circumference * (1 - this._score));
 
         return [`${circumference}px`, `${dashOffset}px`];
+    }
+
+    get sentences(): string[] {
+        return this.feedback ? splitIntoSentences(this.feedback) : [];
     }
 }

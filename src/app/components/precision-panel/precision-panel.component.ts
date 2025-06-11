@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IssueDetailComponent } from '../issue-detail/issue-detail.component';
 import { PrecisionResult } from '../../models/evaluation';
 import { TextIssue } from '../../models/issue';
-import { getScoreColor, getScoreInPercentage } from '../../utils';
+import { getScoreColor, getScoreInPercentage } from '../../utils/classes-mapping.utils';
 import { IssueDistributionChartComponent } from "../issue-distribution-chart/issue-distribution-chart.component";
 import { Category } from '../../models/issue';
 import { getCategoryName } from '../../models/issue';

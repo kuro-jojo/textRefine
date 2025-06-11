@@ -3,6 +3,7 @@ import { ErrorCategory, TextIssue } from "./issue";
 export interface EvaluationRequest {
     text: string;
     topic?: string;
+    audience?: string;
 }
 
 // Global Score Interface
@@ -106,12 +107,9 @@ export interface CorrectnessScoreBreakdown {
 export interface ReadabilityResult {
     // Core metrics with professional interpretation
     flesch_reading_ease: number;  // 0-100
-    flesch_kincaid_grade: number;  // 0-20
     smog_index: number;  // 0-20
-    gunning_fog: number;  // 0-20
-    automated_readability_index: number;  // 0-20
-    coleman_liau_index: number;  // 0-20
     dale_chall_score: number;  // 0-10
+    avg_words_per_sentence: number;  // 0-20
 
     // Composite score (0-1 where higher is better)
     score: number;  // 0-1
@@ -124,6 +122,11 @@ export interface ReadabilityResult {
     overall_grade_level: string;
     target_audience: string;
     flesch_reading_ease_level: string;
+
+    // Audience related metrics
+    audience_appropriate: boolean;
+    audience_issues: string[];
+    audience_adjusted_score: number;
 
     estimated_reading_time: number; // in seconds
 }

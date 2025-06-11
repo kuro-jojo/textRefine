@@ -35,10 +35,11 @@
             }}</span>
             <span class="ml-1 text-xs text-gray-500"
                 >/ {{ lexicalDiversityResult?.word_count }} words
-                <app-tooltip
-                    tooltipText="Only meaningful content is counted (e.g. excluding stop words) - including duplicates."
-                ></app-tooltip
-            ></span>
+            </span>
+            <app-tooltip
+                tooltipText="Only meaningful content is counted (e.g. excluding stop words) - including duplicates."
+                [translate]="'2/2'"
+            />
         </div>
         <div class="flex items-center gap-2 text-sm text-gray-700">
             <i class="text-sky-400 fa fa-percent"></i>
@@ -46,6 +47,10 @@
             <span class="text-gray-900 font-bold ml-1">{{
                 lexicalDiversityResult?.ttr | number : "1.2-2"
             }}</span>
+            <app-tooltip
+                tooltipText="Type-Token Ratio (TTR) measures the ratio of distinct words to total words. Higher values indicate more lexical diversity."
+                [translate]="'2/2'"
+            />
         </div>
         <div class="flex items-center gap-2 text-sm text-gray-700">
             <i class="text-sky-400 fa fa-chart-simple"></i>
@@ -54,6 +59,10 @@
             <span class="ml-1 text-xs text-gray-500"
                 >/ {{ lexicalDiversityResult?.word_count }}</span
             >
+            <app-tooltip
+                tooltipText="MTLD (Meaningful Text Length) measures the average length of meaningful text segments. Higher values indicate more lexical diversity."
+                [translate]="'2/2'"
+            />
         </div>
     </div>
 </div>

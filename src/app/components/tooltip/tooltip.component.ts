@@ -7,6 +7,5 @@ import { Component, Input } from '@angular/core';
 })
 export class TooltipComponent {
     @Input() tooltipText!: string;
-    @Input() leftPosition: number = 40;
-    @Input() translate: number = 108;
+    @Input() translate: string = "1";
 }

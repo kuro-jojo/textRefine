@@ -1,11 +1,17 @@
 import { Routes } from '@angular/router';
-import { ResultComponent } from './components/result/result.component';
-import { HomeComponent } from './components/home/home.component';
+import { ResultComponent } from './pages/result/result.component';
+import { BasicAnalysisComponent } from './pages/basic-analysis/basic-analysis.component';
+import { LandingPageComponent } from './pages/landing-page/landing-page.component';
+
 
 export const routes: Routes = [
     {
         path: '',
-        component: HomeComponent
+        component: LandingPageComponent
+    },
+    {
+        path: 'try',
+        component: BasicAnalysisComponent
     },
     {
         path: 'result',
