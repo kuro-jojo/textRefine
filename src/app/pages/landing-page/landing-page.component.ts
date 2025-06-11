@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { TextEditorComponent } from "../text-editor/text-editor.component";
-import { TestimonialComponent, Testimonial } from "../testimonial/testimonial.component";
 import { CommonModule } from '@angular/common';
-import { PricingContainerComponent } from '../pricing-container/pricing-container.component';
+import { TextEditorComponent } from "../../components/text-editor/text-editor.component";
+import { TestimonialComponent, Testimonial } from "../../components/testimonial/testimonial.component";
+import { PricingContainerComponent } from "../../components/pricing-container/pricing-container.component";
 
 @Component({
     selector: 'app-landing-page',

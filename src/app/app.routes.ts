@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
-import { ResultComponent } from './components/result/result.component';
-import { HomeComponent } from './components/home/home.component';
-import { LandingPageComponent } from './components/landing-page/landing-page.component';
+import { ResultComponent } from './pages/result/result.component';
+import { BasicAnalysisComponent } from './pages/basic-analysis/basic-analysis.component';
+import { LandingPageComponent } from './pages/landing-page/landing-page.component';
+
 
 export const routes: Routes = [
     {
@@ -9,8 +10,8 @@ export const routes: Routes = [
         component: LandingPageComponent
     },
     {
-        path: 'home',
-        component: HomeComponent
+        path: 'try',
+        component: BasicAnalysisComponent
     },
     {
         path: 'result',

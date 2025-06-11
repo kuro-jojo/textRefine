@@ -3,9 +3,11 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { CorrectnessPanelComponent } from '../correctness-panel/correctness-panel.component';
-import { CoherenceResult, CorrectnessResult, EvaluationRequest } from '../../models/evaluation';
+import { CorrectnessPanelComponent } from '../../components/correctness-panel/correctness-panel.component';
 import {
+    CoherenceResult,
+    CorrectnessResult,
+    EvaluationRequest,
     EvaluationGlobalScore,
     PrecisionResult,
     SophisticationResult,
@@ -16,14 +18,14 @@ import {
 import { Category, ErrorCategory, getCategoryName } from '../../models/issue';
 import { EvaluationResultService } from '../../services/evaluation-result.service';
 import { EvaluationService } from '../../services/evaluation.service';
-import { getScoreColor, DETAIL_OF_CATEGORY } from '../../utils';
-import { LexicalDiversityPanelComponent } from "../lexical-diversity-panel/lexical-diversity-panel.component";
-import { OverallScoreComponent } from '../overall-score/overall-score.component';
-import { PrecisionPanelComponent } from '../precision-panel/precision-panel.component';
-import { ReadabilityPanelComponent } from "../readability-panel/readability-panel.component";
-import { ScoreCardComponent } from '../score-card/score-card.component';
-import { SophisticationPanelComponent } from "../sophistication-panel/sophistication-panel.component";
-import { CoherencePanelComponent } from "../coherence-panel/coherence-panel.component";
+import { getScoreColor, DETAIL_OF_CATEGORY } from '../../utils/classes-mapping.utils';
+import { LexicalDiversityPanelComponent } from '../../components/lexical-diversity-panel/lexical-diversity-panel.component';
+import { OverallScoreComponent } from '../../components/overall-score/overall-score.component';
+import { PrecisionPanelComponent } from '../../components/precision-panel/precision-panel.component';
+import { ReadabilityPanelComponent } from '../../components/readability-panel/readability-panel.component';
+import { ScoreCardComponent } from '../../components/score-card/score-card.component';
+import { SophisticationPanelComponent } from '../../components/sophistication-panel/sophistication-panel.component';
+import { CoherencePanelComponent } from '../../components/coherence-panel/coherence-panel.component';
 
 interface TextToken {
     text: string;
@@ -102,7 +104,8 @@ export class ResultComponent implements OnInit {
 
         const request: EvaluationRequest = {
             text: text,
-            topic: 'Environment'
+            topic: 'Environment',
+            audience: 'professional'
         };
 
         this.evaluationService.evaluateText(request).subscribe({
@@ -129,6 +132,8 @@ export class ResultComponent implements OnInit {
                     this.lexicalDiversityResult = result.vocabulary.lexical_diversity;
                     this.readabilityResult = result.readability;
                     this.coherenceResult = result.coherence;
+
+                    console.log(result, this.readabilityResult);
                 } else {
                     this.router.navigate(['/']);
                 }

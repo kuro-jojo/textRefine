@@ -21,6 +21,12 @@
                 [placeholder]="'Type here...'"
             ></ngx-editor>
         </div>
+
+        <app-word-counter
+            [wordCount]="wordCount"
+            [charCount]="charCount"
+        ></app-word-counter>
+        
         <div
             *ngIf="!isEvaluating && form.invalid"
             class="text-blue-500 text-sm my-2"
@@ -54,8 +60,12 @@
                 type="text"
                 formControlName="topic"
                 placeholder="Enter topic (e.g., 'Climate Change', 'Mobile Technology')"
-                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-sky-500 focus:border-transparent focus:outline-none transition duration-200 placeholder-gray-400"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-sky-500 focus:border-transparent focus:outline-none transition duration-200 placeholder-gray-400 mt-2"
             />
+            <div class="text-xs text-gray-500 mt-3">
+                <i class="fa-solid fa-circle-info mr-1"></i>
+                The analysis will be focused on the selected topic.
+            </div>
             <div
                 *ngIf="form.get('topic')?.invalid && form.get('topic')?.touched"
                 class="text-red-500 text-xs mt-1"
@@ -64,10 +74,43 @@
             </div>
         </div>
 
-        <app-word-counter
-            [wordCount]="wordCount"
-            [charCount]="charCount"
-        ></app-word-counter>
+
+        <!-- Audience Selection -->
+        <div class="mt-4 mb-4">
+            <div class="flex items-center mb-2 gap-2">
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input
+                        type="checkbox"
+                        class="sr-only peer"
+                        formControlName="enableAudience"
+                        (change)="onAudienceToggle($event)"
+                    />
+                    <div
+                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-sky-500 mr-2"
+                    ></div>
+                    <app-tooltip
+                        tooltipText="Enable to select a specific target audience for your text. This helps tailor the analysis to be more relevant for your specific readers."
+                    ></app-tooltip>
+                    <span class="ml-1 text-sm font-medium text-gray-700">Target Specific Audience</span>
+                </label>
+            </div>
+            
+            <div *ngIf="form.get('enableAudience')?.value" class="mt-5">
+                <select
+                    formControlName="audience"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-sky-500 focus:border-transparent focus:outline-none transition duration-200"
+                >
+                    <option [ngValue]="null">Select an audience...</option>
+                    <option *ngFor="let audience of audienceOptions" [value]="audience.value">
+                        {{ audience.label }}
+                    </option>
+                </select>
+            </div>
+            <div class="text-xs text-gray-500 mt-3">
+                <i class="fa-solid fa-circle-info mr-1"></i>
+                The analysis will be adjusted based on the selected audience's reading level and expectations.
+            </div>
+        </div>
 
         <!-- Analyze Button / Progress Bar -->
         <div class="w-full">

@@ -27,6 +27,16 @@ import { TooltipComponent } from "../tooltip/tooltip.component";
 })
 export class TextEditorComponent implements OnInit {
     MIN_WORDS = 20;
+
+    audienceOptions: AudienceOption[] = [
+        { value: 'children', label: 'Children' },
+        { value: 'teenagers', label: 'Teenagers' },
+        { value: 'young_adults', label: 'Young Adults' },
+        { value: 'general', label: 'General Audience' },
+        { value: 'business', label: 'Business/Corporate' },
+        { value: 'professional', label: 'Professional/Technical' },
+        { value: 'academic', label: 'Academic/Researcher' },
+    ];
     editor: Editor = new Editor({
         history: true
     });
@@ -44,7 +54,9 @@ export class TextEditorComponent implements OnInit {
     form = new FormGroup({
         editorContent: new FormControl('', [Validators.required(), this.minWordsValidator(this.MIN_WORDS)]),
         useTopic: new FormControl(false),
-        topic: new FormControl({ value: '', disabled: true })
+        topic: new FormControl({ value: '', disabled: true }),
+        enableAudience: new FormControl(false),
+        audience: new FormControl({ value: null, disabled: true })
     });
 
     wordCount: number = 0;
@@ -99,6 +111,20 @@ export class TextEditorComponent implements OnInit {
         topicControl?.updateValueAndValidity();
     }
 
+    onAudienceToggle(event: Event): void {
+        const checked = (event.target as HTMLInputElement).checked;
+        const audienceControl = this.form.get('audience');
+        if (checked) {
+            audienceControl?.enable();
+            audienceControl?.setValidators([Validators.required()]);
+        } else {
+            audienceControl?.disable();
+            audienceControl?.clearValidators();
+            audienceControl?.setValue(null);
+        }
+        audienceControl?.updateValueAndValidity();
+    }
+
     onSubmit(): void {
         if (!this.form.value.editorContent || this.charCount === 0) {
             console.error('No content provided');
@@ -130,7 +156,8 @@ export class TextEditorComponent implements OnInit {
         const editorContent = this.form.value.editorContent;
         const request: EvaluationRequest = {
             text: editorContent,
-            topic: this.form.value.topic || undefined
+            topic: this.form.value.topic || undefined,
+            audience: this.form.value.enableAudience ? (this.form.value.audience || undefined) : undefined
         };
 
         this.evaluationService.evaluateText(request).subscribe(
@@ -267,4 +294,10 @@ export class TextEditorComponent implements OnInit {
         this.editor.destroy();
         this.clearAllTimeouts();
     }
+}
+
+
+interface AudienceOption {
+    value: string;
+    label: string;
 }
