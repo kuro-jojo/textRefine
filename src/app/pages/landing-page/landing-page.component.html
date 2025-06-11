@@ -21,7 +21,7 @@
                     <span
                         class="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-medium text-center transition shadow-lg shadow-teal-600/20 cursor-pointer"
                     >
-                        Try it Now
+                    <a routerLink="/try">Try it Now</a>
                     </span>
                     <span
                         class="border border-teal-600 text-teal-600 px-8 py-3 rounded-full font-medium text-center hover:bg-teal-50 transition cursor-pointer"
@@ -510,7 +510,7 @@
             [currency]="'€'"
             [billingPeriod]="'mo'"
             [highlightPopular]="true"
-        ></app-pricing-container>
+        />
     </div>
 </section>
 
@@ -521,7 +521,10 @@
             <h2 class="font-serif text-4xl font-bold text-gray-900 mb-4">
                 What our users say
             </h2>
-            <p *ngIf="testimonials.length > 0" class="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p
+                *ngIf="testimonials.length > 0"
+                class="text-xl text-gray-600 max-w-2xl mx-auto"
+            >
                 Join thousands of satisfied writers who improved their work with
                 TextRefine.
             </p>
@@ -541,8 +544,7 @@
             <app-testimonial
                 *ngFor="let testimonial of testimonials"
                 [testimonial]="testimonial"
-            >
-            </app-testimonial>
+            />
         </div>
     </div>
 </section>

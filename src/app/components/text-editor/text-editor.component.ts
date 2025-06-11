@@ -48,9 +48,10 @@ export class TextEditorComponent implements OnInit {
         ['horizontal_rule', 'format_clear'],
         ['undo', 'redo'],
     ];
-    error: string = '';
+    errors: { [key: string]: string } = {};
     info: string = '';
-
+    errorTimeout: number = 10000;
+    
     form = new FormGroup({
         editorContent: new FormControl('', [Validators.required(), this.minWordsValidator(this.MIN_WORDS)]),
         useTopic: new FormControl(false),
@@ -90,10 +91,6 @@ export class TextEditorComponent implements OnInit {
     handleKeyboardEvent(event: KeyboardEvent): void {
         if (event.ctrlKey && event.key === 'Enter') {
             event.preventDefault();
-            if (this.isEvaluating) {
-                this.info = 'Evaluation in progress... Please wait.';
-                return;
-            }
             this.onSubmit();
         }
     }
@@ -126,26 +123,60 @@ export class TextEditorComponent implements OnInit {
     }
 
     onSubmit(): void {
-        if (!this.form.value.editorContent || this.charCount === 0) {
-            console.error('No content provided');
-            this.error = 'No content provided';
-            this.isEvaluating = false;
-            this.addTimeout('errorTimeout', () => {
-                this.error = '';
-            }, 2000);
-            return;
-        }
-        if (this.form.invalid) {
-            console.error('Form is invalid');
-            this.error = 'Form is invalid. Make sure you have at least 20 words in the text.';
-            this.isEvaluating = false;
-            this.addTimeout('errorTimeout', () => {
-                this.error = '';
-            }, 2000);
-            return;
-        }
-        this.error = '';
         this.info = '';
+
+        if (this.isEvaluating) {
+            this.info = 'Evaluation is already in progress... Please wait.';
+            return;
+        }
+
+        if (!this.form.value.editorContent || this.charCount === 0) {
+            this.errors = {};
+            console.error('No content provided');
+            this.errors['emptyContent'] = 'No content provided';
+            this.isEvaluating = false;
+            this.addTimeout('errorTimeout', () => {
+                delete this.errors['emptyContent'];
+            }, this.errorTimeout); // 10 seconds
+            return;
+        } else {
+            delete this.errors['emptyContent'];
+        }
+
+        if (this.form.invalid) {
+            if (this.form.get('topic')!.invalid) {
+                if (this.errors['topic'] === '' || this.errors['topic'] === undefined) {
+                    this.errors['topic'] = 'The topic option is enabled but no topic is selected';
+                    this.addTimeout('topicErrorTimeout', () => {
+                        delete this.errors['topic'];
+                    }, this.errorTimeout);
+                }
+            } else {
+                delete this.errors['topic'];
+            }
+            if (this.form.get('audience')!.invalid) {
+                if (this.errors['audience'] === '' || this.errors['audience'] === undefined) {
+                    this.errors['audience'] = 'The audience option is enabled but no audience is selected';
+                    this.addTimeout('audienceErrorTimeout', () => {
+                        delete this.errors['audience'];
+                    }, this.errorTimeout);
+                }
+            } else {
+                delete this.errors['audience'];
+            }
+            if (this.form.get('editorContent')!.invalid) {
+                if (this.errors['editorContent'] === '' || this.errors['editorContent'] === undefined) {
+                    this.errors['editorContent'] = 'Make sure you have at least 20 words in the text.';
+                    this.addTimeout('editorContentErrorTimeout', () => {
+                        delete this.errors['editorContent'];
+                    }, this.errorTimeout);
+                }
+            } else {
+                delete this.errors['editorContent'];
+            }
+            this.isEvaluating = false;
+            return;
+        }
 
         this.isEvaluating = true;
         this.progress = 0;
@@ -201,7 +232,7 @@ export class TextEditorComponent implements OnInit {
                     }, 2000);
 
                     this.addTimeout('errorStep', () => {
-                        this.error = errorMessage;
+                        this.errors['errorStep'] = errorMessage;
                         this.info = '';
                         this.isEvaluating = false;
                     }, 3000);

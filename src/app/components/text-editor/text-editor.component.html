@@ -1,12 +1,15 @@
-<div
-    *ngIf="error && !isEvaluating"
-    class="text-red-500 text-sm bg-red-100 text-center p-4 rounded mb-4"
->
-    {{ error }}
+<div *ngIf="errors | keyvalue as errorsObj">
+    <div
+        *ngFor="let error of errorsObj"
+        class="text-red-500 text-sm bg-red-100 text-center p-4 rounded mb-4"
+    >
+        {{ error.value }}
+    </div>
 </div>
 <div
     *ngIf="info"
-    class="text-blue-500 text-sm bg-blue-100 text-center p-4 rounded mb-4"
+    class="text-blue-500 text-sm bg-blue-100 text-center p-4 rounded mb-4 flex flex-col gap-2"
+    role="alert"
 >
     {{ info }}
 </div>
@@ -24,9 +27,8 @@
 
         <app-word-counter
             [wordCount]="wordCount"
-            [charCount]="charCount"
-        ></app-word-counter>
-        
+            [charCount]="charCount"/>
+
         <div
             *ngIf="!isEvaluating && form.invalid"
             class="text-blue-500 text-sm my-2"
@@ -49,7 +51,7 @@
                     ></div>
                     <app-tooltip
                         tooltipText="Adding a topic helps the analysis focus on specific aspects of your text, providing more relevant feedback and suggestions."
-                    ></app-tooltip>
+                    />
                     <span class="ml-1 text-sm font-medium text-gray-700"
                         >Add Topic</span
                     >
@@ -74,7 +76,6 @@
             </div>
         </div>
 
-
         <!-- Audience Selection -->
         <div class="mt-4 mb-4">
             <div class="flex items-center mb-2 gap-2">
@@ -90,25 +91,31 @@
                     ></div>
                     <app-tooltip
                         tooltipText="Enable to select a specific target audience for your text. This helps tailor the analysis to be more relevant for your specific readers."
-                    ></app-tooltip>
-                    <span class="ml-1 text-sm font-medium text-gray-700">Target Specific Audience</span>
+                    />
+                    <span class="ml-1 text-sm font-medium text-gray-700"
+                        >Target Specific Audience</span
+                    >
                 </label>
             </div>
-            
+
             <div *ngIf="form.get('enableAudience')?.value" class="mt-5">
                 <select
                     formControlName="audience"
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-sky-500 focus:border-transparent focus:outline-none transition duration-200"
                 >
                     <option [ngValue]="null">Select an audience...</option>
-                    <option *ngFor="let audience of audienceOptions" [value]="audience.value">
+                    <option
+                        *ngFor="let audience of audienceOptions"
+                        [value]="audience.value"
+                    >
                         {{ audience.label }}
                     </option>
                 </select>
             </div>
             <div class="text-xs text-gray-500 mt-3">
                 <i class="fa-solid fa-circle-info mr-1"></i>
-                The analysis will be adjusted based on the selected audience's reading level and expectations.
+                The analysis will be adjusted based on the selected audience's
+                reading level and expectations.
             </div>
         </div>
 

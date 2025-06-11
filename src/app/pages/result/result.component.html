@@ -1,6 +1,10 @@
 <main class="p-6 mx-auto container">
     <!-- Results Panel (Right) -->
-    <div id="results-panel" class="w-full flex flex-col gap-6" style="margin-top: 4rem;"> 
+    <div
+        id="results-panel"
+        class="w-full flex flex-col gap-6"
+        style="margin-top: 4rem"
+    >
         <!-- Overall Score -->
         <div *ngIf="evaluationResult">
             <app-overall-score
@@ -12,7 +16,7 @@
                 [wordCount]="precisionResult?.word_count ?? null"
                 [rareWordCount]="sophisticationResult?.rare_count ?? null"
                 [feedback]="coherenceResult?.feedback ?? null"
-            ></app-overall-score>
+            />
         </div>
         <div *ngIf="error" class="bg-red-50 text-red-600 p-4 rounded-lg mb-4">
             {{ error }}
@@ -33,7 +37,7 @@
                 "
                 (click)="selectTab('coherence')"
                 class="cursor-pointer"
-            ></app-score-card>
+            />
             <!-- Correctness -->
             <app-score-card
                 title="Correctness"
@@ -45,7 +49,7 @@
                 "
                 (click)="selectTab('correctness')"
                 class="cursor-pointer"
-            ></app-score-card>
+            />
 
             <!-- Sophistication -->
             <app-score-card
@@ -59,7 +63,7 @@
                 "
                 (click)="selectTab('sophistication')"
                 class="cursor-pointer"
-            ></app-score-card>
+            />
 
             <!-- Precision -->
             <app-score-card
@@ -72,7 +76,7 @@
                 "
                 (click)="selectTab('precision')"
                 class="cursor-pointer"
-            ></app-score-card>
+            />
 
             <!-- Vocabulary Diversity -->
             <app-score-card
@@ -85,7 +89,7 @@
                 "
                 (click)="selectTab('lexical_diversity')"
                 class="cursor-pointer"
-            ></app-score-card>
+            />
 
             <!-- Readability -->
             <app-score-card
@@ -99,7 +103,7 @@
                 "
                 (click)="selectTab('readability')"
                 class="cursor-pointer"
-            ></app-score-card>
+            />
         </div>
 
         <!-- Detailed Breakdown Tabs -->
@@ -109,7 +113,8 @@
         >
             <p>No issues found</p>
         </div>
-        <div #breakdownContent
+        <div
+            #breakdownContent
             class="bg-white rounded-xl shadow-xl mb-6"
             *ngIf="tabs.length > 0"
         >
